@@ -9,8 +9,16 @@ gem 'activerecord-deprecated_finders'
 gem 'protected_attributes', '1.0.8'
 
 gem 'mysql2', '>= 0.3.13', '< 0.5'
-gem 'execjs','1.4.0'
-gem 'therubyracer','0.10.2'
+# therubyracer 0.10.2 cannot compile on Ubuntu 18.04+ (V8 3.x incompatibility)
+# execjs is installed as a transitive dep; EXECJS_RUNTIME=Node uses Node.js instead
+# gem 'execjs','1.4.0'
+# gem 'therubyracer','0.10.2'
+
+# Ruby 2.3 supports nokogiri <= 1.10.x; loofah 2.21+ requires Nokogiri::HTML4 (added in
+# nokogiri 1.14) so pin to the last compatible versions
+gem 'nokogiri', '~> 1.10.10'
+gem 'loofah', '~> 2.19.1'
+gem 'rails-html-sanitizer', '~> 1.4.4'
 
 gem 'ruby-ldap', '0.9.16'
 gem 'will_paginate', '3.0.7'
@@ -19,7 +27,8 @@ gem 'net-ssh', '2.9.1'
 gem 'rmagick', '2.15.4', require: false
 gem 'hpricot', '0.8.4'
 gem 'tamtam', '0.0.3'
-gem 'zipruby', '0.3.6'
+# zipruby 0.3.6 incompatible with libzip 1.x — replaced with rubyzip in Phase 2
+# gem 'zipruby', '0.3.6'
 gem 'icalendar', '1.5.4'
 gem 'ri_cal', '0.8.8'
 gem 'render_component_vho', '3.2.1'

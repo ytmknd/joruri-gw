@@ -1,0 +1,65 @@
+services:
+  db:
+    image: mysql:5.7
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: jorurigw
+      MYSQL_USER: joruri
+      MYSQL_PASSWORD: pass
+    command:
+      - --character-set-server=utf8
+      - --collation-server=utf8_general_ci
+      - --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-ppass"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/ubuntu18-ruby2/Dockerfile
+    image: joruri-gw:phase1-ubuntu18-ruby2
+    pull_policy: never
+    platform: linux/amd64
+    working_dir: /var/share/jorurigw
+    environment:
+      RAILS_ENV: development
+      BUNDLE_APP_CONFIG: /var/share/jorurigw/.bundle
+      BUNDLE_PATH: /var/share/jorurigw/vendor/bundle
+      BUNDLER_VERSION: "1.17.3"
+      CHOWN_SOURCE_TREE: "0"
+      EXECJS_RUNTIME: Node
+      LANG: ja_JP.UTF-8
+      LC_ALL: ja_JP.UTF-8
+      SECRET_KEY_BASE: joruri_gw_secret_key_base_development_docker
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/var/share/jorurigw:cached
+      - bundle_ubuntu18_ruby2:/var/share/jorurigw/vendor/bundle
+      - bundle_config_ubuntu18_ruby2:/var/share/jorurigw/.bundle
+      - log_ubuntu18_ruby2:/var/share/jorurigw/log
+      - public_assets_ubuntu18_ruby2:/var/share/jorurigw/public/assets
+      - tmp_ubuntu18_ruby2:/var/share/jorurigw/tmp
+      - upload_ubuntu18_ruby2:/var/share/jorurigw/upload
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    stdin_open: true
+    tty: true
+
+volumes:
+  mysql_data:
+  bundle_ubuntu18_ruby2:
+  bundle_config_ubuntu18_ruby2:
+  log_ubuntu18_ruby2:
+  public_assets_ubuntu18_ruby2:
+  tmp_ubuntu18_ruby2:
+  upload_ubuntu18_ruby2:
