@@ -80,6 +80,7 @@ group :development do
   gem 'rack-mini-profiler' # profiler
   gem 'rb-readline', '~> 0.5.1'
   gem 'quiet_assets', '~> 1.0.3'
+  gem 'brakeman', require: false
 end
 
 # To use ActiveModel has_secure_password
