@@ -1,4 +1,4 @@
-class System::GroupChangeDate < ActiveRecord::Base
+class System::GroupChangeDate < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
 

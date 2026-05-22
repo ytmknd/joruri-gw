@@ -19,8 +19,8 @@ protected
     respond_to do |format|
       format.html { render }
       format.xml  { render :xml => to_xml(item) }
-      format.json { render :text => item.to_json }
-      format.yaml { render :text => item.to_yaml }
+      format.json { render plain: item.to_json }
+      format.yaml { render plain: item.to_yaml }
     end
   end
 

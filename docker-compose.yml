@@ -55,6 +55,220 @@ services:
     stdin_open: true
     tty: true
 
+  app-phase2:
+    build:
+      context: .
+      dockerfile: docker/ubuntu18-ruby23-rails5/Dockerfile
+    image: joruri-gw:phase2-ubuntu18-ruby23-rails5
+    pull_policy: never
+    platform: linux/amd64
+    working_dir: /var/share/jorurigw
+    environment:
+      RAILS_ENV: development
+      BUNDLE_APP_CONFIG: /var/share/jorurigw/.bundle
+      BUNDLE_PATH: /var/share/jorurigw/vendor/bundle
+      BUNDLER_VERSION: "1.17.3"
+      CHOWN_SOURCE_TREE: "0"
+      EXECJS_RUNTIME: Node
+      LANG: ja_JP.UTF-8
+      LC_ALL: ja_JP.UTF-8
+      SECRET_KEY_BASE: joruri_gw_secret_key_base_development_docker
+    ports:
+      - "3001:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/var/share/jorurigw:cached
+      - bundle_ubuntu18_ruby23_rails5:/var/share/jorurigw/vendor/bundle
+      - bundle_config_ubuntu18_ruby23_rails5:/var/share/jorurigw/.bundle
+      - log_ubuntu18_ruby23_rails5:/var/share/jorurigw/log
+      - public_assets_ubuntu18_ruby23_rails5:/var/share/jorurigw/public/assets
+      - tmp_ubuntu18_ruby23_rails5:/var/share/jorurigw/tmp
+      - upload_ubuntu18_ruby23_rails5:/var/share/jorurigw/upload
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    stdin_open: true
+    tty: true
+
+  app-ruby25:
+    build:
+      context: .
+      dockerfile: docker/ubuntu18-ruby25/Dockerfile
+    image: joruri-gw:phase2-ubuntu18-ruby25
+    pull_policy: never
+    platform: linux/amd64
+    profiles:
+      - ruby-upgrade
+    working_dir: /var/share/jorurigw
+    environment:
+      RAILS_ENV: development
+      BUNDLE_APP_CONFIG: /var/share/jorurigw/.bundle
+      BUNDLE_PATH: /var/share/jorurigw/vendor/bundle
+      BUNDLER_VERSION: "1.17.3"
+      CHOWN_SOURCE_TREE: "0"
+      EXECJS_RUNTIME: Node
+      LANG: ja_JP.UTF-8
+      LC_ALL: ja_JP.UTF-8
+      SECRET_KEY_BASE: joruri_gw_secret_key_base_development_docker
+    ports:
+      - "3002:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/var/share/jorurigw:cached
+      - bundle_ubuntu18_ruby25:/var/share/jorurigw/vendor/bundle
+      - bundle_config_ubuntu18_ruby25:/var/share/jorurigw/.bundle
+      - log_ubuntu18_ruby25:/var/share/jorurigw/log
+      - public_assets_ubuntu18_ruby25:/var/share/jorurigw/public/assets
+      - tmp_ubuntu18_ruby25:/var/share/jorurigw/tmp
+      - upload_ubuntu18_ruby25:/var/share/jorurigw/upload
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    stdin_open: true
+    tty: true
+
+  app-ruby27-ubuntu18:
+    build:
+      context: .
+      dockerfile: docker/ubuntu18-ruby27/Dockerfile
+    image: joruri-gw:phase2-ubuntu18-ruby27
+    pull_policy: never
+    platform: linux/amd64
+    profiles:
+      - ruby-upgrade
+    working_dir: /var/share/jorurigw
+    environment:
+      RAILS_ENV: development
+      BUNDLE_APP_CONFIG: /var/share/jorurigw/.bundle
+      BUNDLE_PATH: /var/share/jorurigw/vendor/bundle
+      BUNDLER_VERSION: "1.17.3"
+      CHOWN_SOURCE_TREE: "0"
+      EXECJS_RUNTIME: Node
+      LANG: ja_JP.UTF-8
+      LC_ALL: ja_JP.UTF-8
+      SECRET_KEY_BASE: joruri_gw_secret_key_base_development_docker
+    ports:
+      - "3003:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/var/share/jorurigw:cached
+      - bundle_ubuntu18_ruby27:/var/share/jorurigw/vendor/bundle
+      - bundle_config_ubuntu18_ruby27:/var/share/jorurigw/.bundle
+      - log_ubuntu18_ruby27:/var/share/jorurigw/log
+      - public_assets_ubuntu18_ruby27:/var/share/jorurigw/public/assets
+      - tmp_ubuntu18_ruby27:/var/share/jorurigw/tmp
+      - upload_ubuntu18_ruby27:/var/share/jorurigw/upload
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    stdin_open: true
+    tty: true
+
+  app-phase3:
+    build:
+      context: .
+      dockerfile: docker/ubuntu20-ruby27/Dockerfile
+    image: joruri-gw:phase3-ubuntu20-ruby27
+    pull_policy: never
+    platform: linux/amd64
+    working_dir: /var/share/jorurigw
+    environment:
+      RAILS_ENV: development
+      BUNDLE_APP_CONFIG: /var/share/jorurigw/.bundle
+      BUNDLE_PATH: /var/share/jorurigw/vendor/bundle
+      BUNDLER_VERSION: "2.2.3"
+      CHOWN_SOURCE_TREE: "0"
+      EXECJS_RUNTIME: Node
+      LANG: ja_JP.UTF-8
+      LC_ALL: ja_JP.UTF-8
+      SECRET_KEY_BASE: joruri_gw_secret_key_base_development_docker
+    ports:
+      - "3004:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/var/share/jorurigw:cached
+      - bundle_ubuntu20_ruby27:/var/share/jorurigw/vendor/bundle
+      - bundle_config_ubuntu20_ruby27:/var/share/jorurigw/.bundle
+      - log_ubuntu20_ruby27:/var/share/jorurigw/log
+      - public_assets_ubuntu20_ruby27:/var/share/jorurigw/public/assets
+      - tmp_ubuntu20_ruby27:/var/share/jorurigw/tmp
+      - upload_ubuntu20_ruby27:/var/share/jorurigw/upload
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    stdin_open: true
+    tty: true
+
+  app-phase4:
+    build:
+      context: .
+      dockerfile: docker/ubuntu22-ruby31/Dockerfile
+    image: joruri-gw:phase4-ubuntu22-ruby31
+    pull_policy: never
+    platform: linux/amd64
+    working_dir: /var/share/jorurigw
+    environment:
+      RAILS_ENV: development
+      BUNDLE_APP_CONFIG: /var/share/jorurigw/.bundle
+      BUNDLE_PATH: /var/share/jorurigw/vendor/bundle
+      BUNDLER_VERSION: "2.2.3"
+      CHOWN_SOURCE_TREE: "0"
+      EXECJS_RUNTIME: Node
+      LANG: ja_JP.UTF-8
+      LC_ALL: ja_JP.UTF-8
+      SECRET_KEY_BASE: joruri_gw_secret_key_base_development_docker
+    ports:
+      - "3005:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/var/share/jorurigw:cached
+      - bundle_ubuntu22_ruby31:/var/share/jorurigw/vendor/bundle
+      - bundle_config_ubuntu22_ruby31:/var/share/jorurigw/.bundle
+      - log_ubuntu22_ruby31:/var/share/jorurigw/log
+      - public_assets_ubuntu22_ruby31:/var/share/jorurigw/public/assets
+      - tmp_ubuntu22_ruby31:/var/share/jorurigw/tmp
+      - upload_ubuntu22_ruby31:/var/share/jorurigw/upload
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    stdin_open: true
+    tty: true
+
+  app-phase5:
+    build:
+      context: .
+      dockerfile: docker/ubuntu26-ruby4/Dockerfile
+    image: joruri-gw:phase5-ubuntu26-ruby4
+    pull_policy: never
+    platform: linux/amd64
+    working_dir: /var/share/jorurigw
+    environment:
+      RAILS_ENV: development
+      BUNDLE_APP_CONFIG: /var/share/jorurigw/.bundle
+      BUNDLE_PATH: /var/share/jorurigw/vendor/bundle
+      BUNDLER_VERSION: "2.5.23"
+      CHOWN_SOURCE_TREE: "0"
+      EXECJS_RUNTIME: Node
+      LANG: ja_JP.UTF-8
+      LC_ALL: ja_JP.UTF-8
+      SECRET_KEY_BASE: joruri_gw_secret_key_base_development_docker
+    ports:
+      - "3006:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/var/share/jorurigw:cached
+      - bundle_ubuntu26_ruby4:/var/share/jorurigw/vendor/bundle
+      - bundle_config_ubuntu26_ruby4:/var/share/jorurigw/.bundle
+      - log_ubuntu26_ruby4:/var/share/jorurigw/log
+      - public_assets_ubuntu26_ruby4:/var/share/jorurigw/public/assets
+      - tmp_ubuntu26_ruby4:/var/share/jorurigw/tmp
+      - upload_ubuntu26_ruby4:/var/share/jorurigw/upload
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    stdin_open: true
+    tty: true
+
 volumes:
   mysql_data:
   bundle_ubuntu18_ruby2:
@@ -63,3 +277,39 @@ volumes:
   public_assets_ubuntu18_ruby2:
   tmp_ubuntu18_ruby2:
   upload_ubuntu18_ruby2:
+  bundle_ubuntu18_ruby23_rails5:
+  bundle_config_ubuntu18_ruby23_rails5:
+  log_ubuntu18_ruby23_rails5:
+  public_assets_ubuntu18_ruby23_rails5:
+  tmp_ubuntu18_ruby23_rails5:
+  upload_ubuntu18_ruby23_rails5:
+  bundle_ubuntu18_ruby25:
+  bundle_config_ubuntu18_ruby25:
+  log_ubuntu18_ruby25:
+  public_assets_ubuntu18_ruby25:
+  tmp_ubuntu18_ruby25:
+  upload_ubuntu18_ruby25:
+  bundle_ubuntu18_ruby27:
+  bundle_config_ubuntu18_ruby27:
+  log_ubuntu18_ruby27:
+  public_assets_ubuntu18_ruby27:
+  tmp_ubuntu18_ruby27:
+  upload_ubuntu18_ruby27:
+  bundle_ubuntu20_ruby27:
+  bundle_config_ubuntu20_ruby27:
+  log_ubuntu20_ruby27:
+  public_assets_ubuntu20_ruby27:
+  tmp_ubuntu20_ruby27:
+  upload_ubuntu20_ruby27:
+  bundle_ubuntu22_ruby31:
+  bundle_config_ubuntu22_ruby31:
+  log_ubuntu22_ruby31:
+  public_assets_ubuntu22_ruby31:
+  tmp_ubuntu22_ruby31:
+  upload_ubuntu22_ruby31:
+  bundle_ubuntu26_ruby4:
+  bundle_config_ubuntu26_ruby4:
+  log_ubuntu26_ruby4:
+  public_assets_ubuntu26_ruby4:
+  tmp_ubuntu26_ruby4:
+  upload_ubuntu26_ruby4:

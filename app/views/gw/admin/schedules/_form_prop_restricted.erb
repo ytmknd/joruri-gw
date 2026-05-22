@@ -8,13 +8,13 @@
 
 genre = params[:s_genre].blank? ?  "other":params[:s_genre]
 if !params[:prop_id].blank?
-  u = Gw::PropOther.find_by_id(params[:prop_id].to_i)
+  u = Gw::PropOther.find_by(id: params[:prop_id].to_i)
 else
-  prop = Gw::ScheduleProp.find_by_schedule_id(@item.id)
+  prop = Gw::ScheduleProp.find_by(schedule_id: @item.id)
   if prop.blank?
     raise ERROR,"illegal parametes"
   else
-    u = Gw::PropOther.find_by_id(prop.prop_id)
+    u = Gw::PropOther.find_by(id: prop.prop_id)
     params[:prop_id] = prop.prop_id
   end
 end

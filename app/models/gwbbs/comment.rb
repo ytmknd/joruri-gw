@@ -4,8 +4,8 @@ class Gwbbs::Comment < Gwboard::CommonDb
   include Gwboard::Model::SerialNo
   include Gwboard::Model::Operator
 
-  belongs_to :control, :foreign_key => :title_id
-  belongs_to :doc, :foreign_key => :parent_id
+  belongs_to :control, optional: true, :foreign_key => :title_id
+  belongs_to :doc, optional: true, :foreign_key => :parent_id
 
   validates_presence_of :body
 

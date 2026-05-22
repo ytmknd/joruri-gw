@@ -49,10 +49,10 @@ class Gwcircular::Doc < Gw::Database
     case params[:cond]
     when 'unread'
       commission_docs.abled_docs.with_target_user(Core.user)
-        .where(state: request.mobile? ? 'unread' : %w(unread mobile))
+        .where(state: false ? 'unread' : %w(unread mobile))
     when 'already'
       commission_docs.abled_docs.with_target_user(Core.user)
-        .where(state: request.mobile? ? %w(already mobile) : 'already')
+        .where(state: false ? %w(already mobile) : 'already')
     when 'owner'
       circular_docs.abled_docs.with_target_user(Core.user).without_preparation
     when 'void'

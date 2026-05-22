@@ -95,7 +95,7 @@ class Gwsub::Externalusb < Gwsub::GwsubPref
 
   #名称の部分をセット
   def set_section_name
-    item = System::Group.find_by_id(self.section_id)
+    item = System::Group.find_by(id: self.section_id)
     #self.section_code = ''
     #self.section_name = ''
     return if item.blank?
@@ -103,7 +103,7 @@ class Gwsub::Externalusb < Gwsub::GwsubPref
     self.section_name = "#{item.code}#{item.name}"
   end
   def set_user_name
-    item = System::User.find_by_id(self.user_id)
+    item = System::User.find_by(id: self.user_id)
     #self.user = ''
     return if item.blank?
     self.user = item.name

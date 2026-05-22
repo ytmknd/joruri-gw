@@ -44,9 +44,9 @@ class Gw::PropExtraGroupRentcarMaster < Gw::Database
       :order=>"division_parent_gid, division_gid")
     division_gids = []    # 配列
     items.each do |item|
-      group = System::Group.find_by_id(item.division_gid)
+      group = System::Group.find_by(id: item.division_gid)
       if group.present? && group.state == "enabled"
-        division_gids << [System::Group.find_by_id(item.division_gid).name, item.division_gid]
+        division_gids << [System::Group.find_by(id: item.division_gid).name, item.division_gid]
       end
     end
     return division_gids
@@ -62,7 +62,7 @@ class Gw::PropExtraGroupRentcarMaster < Gw::Database
 
     parent_groups = []
     items.each do |item|
-      group = System::Group.find_by_id(item.division_parent_gid)
+      group = System::Group.find_by(id: item.division_parent_gid)
       parent_groups  << group if group.present? && group.state == "enabled"
     end
 

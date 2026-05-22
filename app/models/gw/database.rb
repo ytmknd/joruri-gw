@@ -1,3 +1,3 @@
-class Gw::Database < ActiveRecord::Base
+class Gw::Database < ApplicationRecord
   self.abstract_class = true
 end

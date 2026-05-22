@@ -1,4 +1,4 @@
-class System::ProductSynchro < ActiveRecord::Base
+class System::ProductSynchro < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
 

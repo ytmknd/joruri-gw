@@ -1,5 +1,5 @@
 require 'digest/sha1'
-class System::User < ActiveRecord::Base
+class System::User < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
 

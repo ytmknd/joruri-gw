@@ -91,7 +91,7 @@ class Gw::ScheduleEventMaster  < Gw::SectionAdminMaster
     items = section_item.order("division_parent_gid, division_gid")
     division_gids = []    # 配列
     items.each do |item|
-      group = System::Group.find_by_id(item.division_gid)
+      group = System::Group.find_by(id: item.division_gid)
       division_gids << [group.name, item.division_gid] if group.present? && group.state == "enabled"
     end
     return division_gids

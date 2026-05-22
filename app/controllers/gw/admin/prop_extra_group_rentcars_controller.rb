@@ -48,7 +48,7 @@ class Gw::Admin::PropExtraGroupRentcarsController < Gw::Admin::PropExtraPmRentca
     present_gids = Gw::PropExtraPmRenewalGroup.get_present_gids(@gid)
     # 親グループ
     range_parent_gids.each do |range_parent_gid|
-      parent = System::Group.find_by_id(range_parent_gid)
+      parent = System::Group.find_by(id: range_parent_gid)
       childrens = parent.children
       childrens.each do |children|
         groups << children.id

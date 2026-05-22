@@ -1,4 +1,4 @@
-class Gw::ScheduleFile < ActiveRecord::Base
+class Gw::ScheduleFile < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
   include Gw::Model::File::Memo

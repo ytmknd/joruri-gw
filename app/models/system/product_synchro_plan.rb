@@ -1,4 +1,4 @@
-class System::ProductSynchroPlan < ActiveRecord::Base
+class System::ProductSynchroPlan < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
   serialize :product_ids, Array

@@ -4,7 +4,7 @@ fyears = Gw::YearFiscalJp.select_dd_markjp_id( 'all' , 5)
 if @fyear.to_i==0
   groups = [['すべて',0]]
 else
-  fyear_base = Gw::YearFiscalJp.find_by_id(@fyear.to_i)
+  fyear_base = Gw::YearFiscalJp.find_by(id: @fyear.to_i)
   if fyear_base.blank?
     groups = [['すべて',0]]
   else

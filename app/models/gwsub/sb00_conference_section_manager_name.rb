@@ -92,7 +92,7 @@ class Gwsub::Sb00ConferenceSectionManagerName < Gwsub::GwsubPref
   def set_items
     # gidから設定値を取得
     unless self.gid.to_i==0
-      group = System::Group.find_by_id(self.gid)
+      group = System::Group.find_by(id: self.gid)
       unless group.blank?
         self.parent_gid = group.parent_id
         self.g_sort_no  = group.sort_no

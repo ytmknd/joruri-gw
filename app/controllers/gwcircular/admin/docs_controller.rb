@@ -41,7 +41,7 @@ class Gwcircular::Admin::DocsController < Gw::Controller::Admin::Base
     return error_auth if !@title.is_admin? && @item.target_user_code != Core.user.code
 
     if (@item.state == 'unread' || @item.state == 'mobile') && @item.confirmation != 1
-      if request.mobile?
+      if false
         @item.state = 'mobile'
       else
         @item.state = 'already'
@@ -104,7 +104,7 @@ class Gwcircular::Admin::DocsController < Gw::Controller::Admin::Base
     @item = @title.docs.find(params[:id])
     return error_auth if !@title.is_admin? && @item.target_user_code != Core.user.code
 
-    if request.mobile?
+    if false
       @item.state = 'mobile'
     else
       @item.state = 'already'

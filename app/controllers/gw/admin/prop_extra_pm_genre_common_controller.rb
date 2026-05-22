@@ -129,7 +129,7 @@ class Gw::Admin::PropExtraPmGenreCommonController < Gw::Controller::Admin::Base
     driver_gname_list = [['すべて','0']] if all=='all'
 
     @mdl_actual.order(:driver_group_id).group(:driver_group_id).each do |item|
-      group = System::GroupHistory.find_by_id(item.driver_group_id)
+      group = System::GroupHistory.find_by(id: item.driver_group_id)
       driver_gname_list << [group.name , group.id] unless group.blank?
     end
     driver_gname_list

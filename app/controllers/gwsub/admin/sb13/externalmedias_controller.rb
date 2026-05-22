@@ -97,7 +97,7 @@ class Gwsub::Admin::Sb13::ExternalmediasController < Gw::Controller::Admin::Base
 #        :section_id => Core.user_group.id ,
         :section_id => section_id ,
 #        :section_name => Core.user_group.name ,
-#        :section_name => System::Group.find_by_id(section_id).ou_name ,
+#        :section_name => System::Group.find_by(id: section_id).ou_name ,
         :section_name => Core.user_group.code.to_s + Core.user_group.name.to_s ,
         :user_section_id => Core.user_group.id ,
         :registed_at => Gw.date_str(Core.now),

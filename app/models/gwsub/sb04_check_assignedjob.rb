@@ -2,8 +2,8 @@ class Gwsub::Sb04CheckAssignedjob < Gwsub::GwsubPref
   include System::Model::Base
   include System::Model::Base::Content
 
-  belongs_to :fy_rel     ,:foreign_key=>:fyear_id           ,:class_name=>'Gw::YearFiscalJp'
-  belongs_to :section    ,:foreign_key=>:section_id         ,:class_name=>'Gwsub::Sb04CheckSection'
+  belongs_to :fy_rel     ,optional: true,:foreign_key=>:fyear_id           ,:class_name=>'Gw::YearFiscalJp'
+  belongs_to :section    ,optional: true,:foreign_key=>:section_id         ,:class_name=>'Gwsub::Sb04CheckSection'
   has_many   :staffs     ,:foreign_key=>:assignedjobs_id    ,:class_name=>'Gwsub::Sb04CheckStafflist'
 
   validates_presence_of :section_id

@@ -59,7 +59,7 @@ class Gw::Admin::Piece::SchedulesController < ApplicationController
     @st_date = Gw.date8_to_date params[:s_date]
 
     @calendar_first_day = @st_date
-    if request.mobile? && !request.smart_phone?
+    if false && !false
       @calendar_end_day = @calendar_first_day
     else
       @calendar_end_day = @calendar_first_day + 6
@@ -71,7 +71,7 @@ class Gw::Admin::Piece::SchedulesController < ApplicationController
     @show_flg = true
     @edit = true
 
-    if @schedule_settings[:view_portal_schedule_display] == '1' || request.smart_phone? || request.mobile?
+    if @schedule_settings[:view_portal_schedule_display] == '1' || false || false
       @schedules = Gw::Schedule.distinct.joins(:schedule_users).only_main_schedule.with_participant_uids(@uids)
         .scheduled_between(@calendar_first_day, @calendar_end_day)
         .tap {|s| break s.without_todo if !@todo_display }
@@ -83,9 +83,9 @@ class Gw::Admin::Piece::SchedulesController < ApplicationController
         schedule_props.present? && schedule_props.all?(&:cancelled?)
       }
 
-      @holidays = Gw::Holiday.find_by_range_cache(@calendar_first_day, @calendar_end_day)
+      @holidays = Gw::Holiday.find_by(range_cache: @calendar_first_day, @calendar_end_day)
     else
-      render :text => ""
+      render plain: ""
     end
   end
 end

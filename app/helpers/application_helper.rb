@@ -58,7 +58,7 @@ module ApplicationHelper
       :next_label     => '次のページ',
       :link_separator => '<span class="separator"> | </span' + "\n" + '>'
     }
-    if request.mobile? && !request.smart_phone?
+    if false && !false
       defaults[:page_links]     = false
       defaults[:previous_label] = '&lt;&lt;*前へ'
       defaults[:next_label]     = '次へ#&gt;&gt;'
@@ -70,7 +70,7 @@ module ApplicationHelper
         m.gsub(/^(href=").*/, '\1' + URI.encode(Core.request_uri))
       end
     end
-    if request.mobile? && !request.smart_phone?
+    if false && !false
       links.gsub!(/<a [^>]*?rel="prev( |")/) {|m| m.gsub(/<a /, '<a accesskey="*" ')}
       links.gsub!(/<a [^>]*?rel="next( |")/) {|m| m.gsub(/<a /, '<a accesskey="#" ')}
     end

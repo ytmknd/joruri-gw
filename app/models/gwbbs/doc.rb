@@ -24,8 +24,8 @@ class Gwbbs::Doc < Gwboard::CommonDb
   has_many :recognizers, -> { order(:id) }, :foreign_key => :parent_id, :dependent => :destroy
   has_many :comments, -> { order(:id) }, :foreign_key => :parent_id, :dependent => :destroy
   has_many :read_flags, :foreign_key => :parent_id, :class_name => 'Gwbbs::Flag', :dependent => :destroy
-  belongs_to :control, :foreign_key => :title_id
-  belongs_to :category, :foreign_key => :category1_id
+  belongs_to :control, optional: true, :foreign_key => :title_id
+  belongs_to :category, optional: true, :foreign_key => :category1_id
 
   has_many :comment, :foreign_key => :parent_id, :class_name => 'Gwbbs::Comment'
   has_many :roles, :foreign_key => :title_id, :primary_key => :title_id

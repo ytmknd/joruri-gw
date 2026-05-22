@@ -1,4 +1,4 @@
-class System::RoleDeveloper < ActiveRecord::Base
+class System::RoleDeveloper < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
 

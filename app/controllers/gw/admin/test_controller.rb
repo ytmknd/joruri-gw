@@ -108,12 +108,12 @@ class Gw::Admin::TestController < ApplicationController
     end
     session[:senddownload] = nil
     response.headers['Content-Disposition'] = %Q(attachment; filename="#{filename}")
-    render :text => stream, :layout => 'empty'
+    render plain: stream, layout: 'empty'
   end
 
   def params_viewer
     param_s = PP.pp(params, '')
-    render :text => param_s, :layout => 'empty'
+    render plain: param_s, layout: 'empty'
   end
 
 
@@ -128,7 +128,7 @@ class Gw::Admin::TestController < ApplicationController
 
     redirect_page = redirect_page_create(item.link_url, item.field_account, item.field_pass)
 
-    render :text => redirect_page, :layout => 'empty'
+    render plain: redirect_page, layout: 'empty'
   end
 
 private

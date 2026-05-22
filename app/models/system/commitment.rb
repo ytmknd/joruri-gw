@@ -1,4 +1,4 @@
-class System::Commitment < ActiveRecord::Base
+class System::Commitment < ApplicationRecord
   include System::Model::Base
 
   validates_presence_of :version, :name, :value

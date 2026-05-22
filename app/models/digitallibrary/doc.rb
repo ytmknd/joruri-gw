@@ -20,8 +20,8 @@ class Digitallibrary::Doc < Gwboard::CommonDb
   has_many :db_files, -> { order(:id) }, :foreign_key => :parent_id, :dependent => :destroy
   has_many :recognizers, -> { order(:id) }, :foreign_key => :parent_id, :dependent => :destroy
   has_many :alias_docs, :foreign_key => :doc_alias, :class_name => 'Digitallibrary::Doc'
-  belongs_to :aliased_doc, :foreign_key => :doc_alias, :class_name => 'Digitallibrary::Doc'
-  belongs_to :control, :foreign_key => :title_id
+  belongs_to :aliased_doc, optional: true, :foreign_key => :doc_alias, :class_name => 'Digitallibrary::Doc'
+  belongs_to :control, optional: true, :foreign_key => :title_id
 
   has_many :roles, :foreign_key => :title_id, :primary_key => :title_id
   has_one :section, :foreign_key => :code, :primary_key => :section_code, :class_name => 'System::Group'

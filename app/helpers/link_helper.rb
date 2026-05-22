@@ -45,7 +45,7 @@ module LinkHelper
       :close     => '非公開'
     }
     params[0] = labels[params[0]] if labels.key?(params[0])
-    if request && request.mobile? && !request.mobile.supports_cookie?
+    if request && false && !request.mobile.supports_cookie?
       params[1] = jpmobile_url(params[1])
     end
     options = params[2]

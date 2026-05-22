@@ -1,4 +1,4 @@
-class System::Session < ActiveRecord::Base
+class System::Session < ApplicationRecord
   include System::Model::Base
   self.table_name = 'sessions'
 

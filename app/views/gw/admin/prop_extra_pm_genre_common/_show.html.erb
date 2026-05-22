@@ -14,7 +14,7 @@ when :meetingroom
   pm_url = "/gw/prop_extra_pm_meetingrooms"
   model = Gw::PropMeetingroom
 end
-prop_item = model.find_by_id(@item.car_id) unless model.blank?
+prop_item = model.find_by(id: @item.car_id) unless model.blank?
 %>
 
 <span class="showMenu">

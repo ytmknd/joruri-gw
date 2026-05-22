@@ -2,7 +2,7 @@ class Digitallibrary::Folder < Digitallibrary::Doc
   acts_as_tree order: { display_order: :asc, sort_no: :asc }
 
   has_many :docs, -> { where(doc_type: 1) }, :foreign_key => :parent_id, :dependent => :destroy
-  belongs_to :control, :foreign_key => :title_id
+  belongs_to :control, optional: true, :foreign_key => :title_id
 
   def folder_editable?
     return false if self.parent_id.blank? && self.level_no == 1 && self.doc_type == 0

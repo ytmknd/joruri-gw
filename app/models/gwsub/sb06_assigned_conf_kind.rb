@@ -2,8 +2,8 @@ class Gwsub::Sb06AssignedConfKind < Gwsub::GwsubPref
   include System::Model::Base
   include System::Model::Base::Content
 
-  belongs_to  :fyear_r     ,:foreign_key=>:fyear_id        ,:class_name => 'Gw::YearFiscalJp'
-  belongs_to  :cat         ,:foreign_key=>:conf_cat_id     ,:class_name => 'Gwsub::Sb06AssignedConfCategory'
+  belongs_to  :fyear_r     ,optional: true,:foreign_key=>:fyear_id        ,:class_name => 'Gw::YearFiscalJp'
+  belongs_to  :cat         ,optional: true,:foreign_key=>:conf_cat_id     ,:class_name => 'Gwsub::Sb06AssignedConfCategory'
 
   validates_presence_of :fyear_id
   validates_presence_of :conf_cat_id

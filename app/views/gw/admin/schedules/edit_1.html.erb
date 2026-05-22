@@ -35,7 +35,7 @@ else
   if (nz(@item.guide_state, 0).to_i > 0)
     guide_place = @item.guide_place
   else
-    meeting_guide_place = Gw::MeetingGuidePlace.find_by_prop_id(prop_id)
+    meeting_guide_place = Gw::MeetingGuidePlace.find_by(prop_id: prop_id)
     if !meeting_guide_place.blank?
       guide_place = meeting_guide_place.place
     else

@@ -1,4 +1,4 @@
-class System::GroupHistory < ActiveRecord::Base
+class System::GroupHistory < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
   include System::Model::Tree

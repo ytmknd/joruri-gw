@@ -71,7 +71,7 @@ class Gw::Admin::LinkSsoController < Gw::Controller::Admin::Base
     @product = System::Product.where(:product_type => params[:to]).first
     raise 'リダイレクト先の設定がありません。' unless @product
 
-    @uri = request.mobile? ? @product.sso_uri_mobile : @product.sso_uri
+    @uri = false ? @product.sso_uri_mobile : @product.sso_uri
     raise 'リダイレクト先の設定がありません。' unless @uri
 
     Net::HTTP.version_1_2
@@ -84,7 +84,7 @@ class Gw::Admin::LinkSsoController < Gw::Controller::Admin::Base
     @token = nil
     http.start do |agent|
       parameters = "account=#{Core.user.code}&password=#{CGI.escape(Core.user.password.to_s)}"
-      parameters << "&mobile_password=#{CGI.escape(Core.user.mobile_password.to_s)}" if request.mobile?
+      parameters << "&mobile_password=#{CGI.escape(Core.user.mobile_password.to_s)}" if false
       response = agent.post(@uri.path, parameters)
       @token = response.body =~ /^OK/i ? response.body.gsub(/^OK /i, '') : nil
     end

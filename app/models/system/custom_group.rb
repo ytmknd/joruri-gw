@@ -1,4 +1,4 @@
-class System::CustomGroup < ActiveRecord::Base
+class System::CustomGroup < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
   include Concerns::System::CustomGroup::Role

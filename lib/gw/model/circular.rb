@@ -8,7 +8,7 @@ module Gw::Model::Circular
       excludes = []
       mobile_rems = []
       for m_rem in items
-        doc = Gwcircular::Doc.find_by_id(m_rem.gid)
+        doc = Gwcircular::Doc.find_by(id: m_rem.gid)
         excludes << m_rem if doc.state=="mobile" if doc
         mobile_rems << m_rem if doc.state=="unread" if doc
       end

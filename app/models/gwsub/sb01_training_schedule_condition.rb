@@ -2,10 +2,10 @@ class Gwsub::Sb01TrainingScheduleCondition < Gwsub::GwsubPref
   include System::Model::Base
   include System::Model::Base::Content
 
-  belongs_to :training_rel   ,:foreign_key=>'training_id'     ,:class_name=>"Gwsub::Sb01Training"
-  belongs_to :user_rel       ,:foreign_key=>'member_id'       ,:class_name=>"System::User"
-  belongs_to :group_rel      ,:foreign_key=>'group_id'        ,:class_name=>"System::Group"
-  belongs_to :prop_rel       ,:foreign_key=>'prop_id'         ,:class_name=>"Gw::PropMeetingroom"
+  belongs_to :training_rel   ,optional: true,:foreign_key=>'training_id'     ,:class_name=>"Gwsub::Sb01Training"
+  belongs_to :user_rel       ,optional: true,:foreign_key=>'member_id'       ,:class_name=>"System::User"
+  belongs_to :group_rel      ,optional: true,:foreign_key=>'group_id'        ,:class_name=>"System::Group"
+  belongs_to :prop_rel       ,optional: true,:foreign_key=>'prop_id'         ,:class_name=>"Gw::PropMeetingroom"
 
 
   validates_presence_of :training_id

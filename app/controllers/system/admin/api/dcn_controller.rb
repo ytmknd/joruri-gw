@@ -10,8 +10,8 @@ class System::Admin::Api::DcnController < ActionController::Base
     dump ['api_dcn_approval_login_common_ret', Time.now.strftime('%Y-%m-%d %H:%M:%S'), ret]
 
     respond_to do |format|
-      format.html { render :text => nil, :layout => false, :status => 200 }
-      format.xml { render :text => nil, :layout => false, :status => 200 }
+      format.html { render plain: nil, layout: false, status: 200 }
+      format.xml { render plain: nil, layout: false, status: 200 }
     end
   end
 end

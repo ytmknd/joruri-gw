@@ -81,7 +81,7 @@ class Gwsub::Externalmedia < Gwsub::GwsubPref
   def check_externalmediakind_record
     return if self.externalmediakind_name.blank?  #入力無ければ処理しない
     self.externalmediakind_name = self.externalmediakind_name.upcase
-    item = Gwsub::Externalmediakind.find_by_name(self.externalmediakind_name)
+    item = Gwsub::Externalmediakind.find_by(name: self.externalmediakind_name)
     unless item.blank?  #名前の該当あれば既にありますメッセージ
       self.externalmediakind_id = item.id
       self.externalmediakind_name = ''
@@ -91,13 +91,13 @@ class Gwsub::Externalmedia < Gwsub::GwsubPref
 
   #名称の部分をセット
   def set_section_name
-    item = System::Group.find_by_id(self.section_id)
+    item = System::Group.find_by(id: self.section_id)
     return if item.blank?
     self.section_code = item.code
     self.section_name = "#{item.code}#{item.name}"
   end
   def set_user_name
-    item = System::User.find_by_id(self.user_id)
+    item = System::User.find_by(id: self.user_id)
     return if item.blank?
     self.user = item.name
   end
@@ -105,13 +105,13 @@ class Gwsub::Externalmedia < Gwsub::GwsubPref
   def set_externalmediakind_record
     if self.externalmediakind_name.blank?
       # 追加名称入力なし
-      item = Gwsub::Externalmediakind.find_by_id(self.externalmediakind_id)
+      item = Gwsub::Externalmediakind.find_by(id: self.externalmediakind_id)
       if item
         self.equipmentname = item.name
       end
     else
       # 追加名称入力あり
-      item = Gwsub::Externalmediakind.find_by_name(self.externalmediakind_name)
+      item = Gwsub::Externalmediakind.find_by(name: self.externalmediakind_name)
       if item.blank?
         item = Gwsub::Externalmediakind.create({
           :sort_order => '0' ,  #varidate対象なので仮設定

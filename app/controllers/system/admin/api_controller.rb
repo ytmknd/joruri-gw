@@ -12,7 +12,7 @@ class System::Admin::ApiController < ApplicationController
   def checker_login
     if request.post?
       state,text = api_checker_login_post(params[:account], params[:password])
-      render :text => text
+      render plain: text
     elsif request.get?
       api_checker_login_get(params[:account], params[:token])
       redirect_to '/'
@@ -25,7 +25,7 @@ class System::Admin::ApiController < ApplicationController
     elsif params[:account] && params[:token]
       return air_login(params[:account], params[:token])
     end
-    render(:text => "NG")
+    render(plain: "NG")
   end
 
 
@@ -93,7 +93,7 @@ protected
 
   def air_token(account, password, mobile_password)
     if user = System::User.authenticate(account, password)
-      if request.mobile?
+      if false
         if user.mobile_access == 1 && !user.mobile_password.to_s.blank? && user.mobile_password == mobile_password
         else
           user = nil
@@ -101,7 +101,7 @@ protected
       end
     end
 
-    return render(:text => 'NG') unless user
+    return render(plain: 'NG') unless user
 
     now   = Time.now
     token = Digest::MD5.hexdigest(now.to_f.to_s)
@@ -110,7 +110,7 @@ protected
     user.air_login_id = "#{token} #{enc_password}"
     user.save(:validate => false)
     dump ['air_sso_login_token',Time.now.strftime('%Y-%m-%d %H:%M:%S'),request.parameters]
-    render :text => "OK #{token}"
+    render plain: "OK #{token}"
   end
 
   def air_login(account, token)
@@ -120,7 +120,7 @@ protected
       c.and :air_login_id, 'LIKE', "#{System::User.escape_like(token)} %"
     end
     @user = System::User.where(cond.where).first
-    return render(:text => "ログインに失敗しました。") unless @user
+    return render(plain: "ログインに失敗しました。") unless @user
 
     @token, enc_password = @user.air_login_id.split(/ /)
     if @user
@@ -132,7 +132,7 @@ protected
     set_current_user(@user)
 
     @admin_uri = params[:path].presence || "/"
-    if request.mobile?
+    if false
       @admin_uri += "?_jgw_session=#{request.session_options[:id]}" unless request.session_options[:id].blank?
     end
     if request.get? # 送信されてきたのがGET形式なら、params[:path]にリダイレクト。POSTならView側でリダイレクト

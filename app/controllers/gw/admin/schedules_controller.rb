@@ -156,7 +156,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
       schedule_props.present? && schedule_props.all?(&:cancelled?)
     }
 
-    @holidays = Gw::Holiday.find_by_range_cache(@calendar_first_day, @calendar_end_day)
+    @holidays = Gw::Holiday.find_by(range_cache: @calendar_first_day, @calendar_end_day)
   end
 
   def _month_date
@@ -247,7 +247,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
 
     @props_json = make_prop_array([@default_prop].compact).to_json
 
-    if request.mobile? && flash[:mail_to].present?
+    if false && flash[:mail_to].present?
       @users_json = make_participant_array(flash[:mail_to]).to_json
     end
   end
@@ -401,7 +401,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
     @prop_type = props.first.prop_type if props.first
 
     @users_json = users.to_json
-    if request.mobile? && flash[:mail_to].present?
+    if false && flash[:mail_to].present?
       @users_json = make_participant_array(flash[:mail_to]).to_json
     end
 
@@ -419,7 +419,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
 
   def create
     @item = Gw::Schedule.new
-    if request.mobile?
+    if false
       _params = set_mobile_params params
       _params = reject_no_necessary_params _params
     else
@@ -445,7 +445,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
         flash_notice '予定の登録', true
         redirect_url = "/gw/schedules/#{@item.id}/show_one?m=new"
         @item.destroy_rentcar_temporaries
-        if request.mobile?
+        if false
           redirect_url += "&gid=#{params[:gid]}&cgid=#{params[:cgid]}&dis=#{params[:dis]}"
         end
         redirect_to redirect_url
@@ -507,7 +507,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
   def update
     @item = Gw::Schedule.find(params[:id])
 
-    if request.mobile?
+    if false
       _params = set_mobile_params params
       _params = reject_no_necessary_params _params
     else
@@ -535,7 +535,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
         redirect_url = "/gw/schedules/#{@item.id}/show_one?m=edit"
         @item.destroy_rentcar_temporaries
 
-        if request.mobile?
+        if false
           if @item.schedule_parent_id.blank?
             redirect_url += "?gid=#{params[:gid]}&cgid=#{params[:cgid]}&dis=#{params[:dis]}"
           else
@@ -559,7 +559,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
     return error_auth if auth_level[:delete_level] != 1
 
     location =
-      if request.mobile?
+      if false
         gw_schedules_path(dis: params[:dis], gid: params[:gid], cgid: params[:cgid], s_date: params[:s_date])
       else
         st = @item.st_at.strftime("%Y%m%d")
@@ -589,7 +589,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
     end
 
     redirect_url =
-      if request.mobile?
+      if false
         gw_schedules_path(dis: params[:dis], gid: params[:gid], cgid: params[:cgid], s_date: params[:s_date])
       else
         st = @item.st_at.strftime("%Y%m%d")

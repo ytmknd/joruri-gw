@@ -1,4 +1,4 @@
-class System::UsersCustomGroup < ActiveRecord::Base
+class System::UsersCustomGroup < ApplicationRecord
   self.primary_key = :rid
   include System::Model::Base
   include System::Model::Base::Content

@@ -1,3 +1,3 @@
-class System::Recognition < ActiveRecord::Base
+class System::Recognition < ApplicationRecord
   include System::Model::Base
 end

@@ -3,7 +3,7 @@ class Gw::Admin::MemosController < Gw::Controller::Admin::Base
   include DownloadHelper
   layout "admin/template/memo"
 
-  before_action :adjust_params_for_mobile, only: [:create, :update], if: -> { request.mobile? }
+  before_action :adjust_params_for_mobile, only: [:create, :update], if: -> { false }
 
   def pre_dispatch
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
@@ -15,7 +15,7 @@ class Gw::Admin::MemosController < Gw::Controller::Admin::Base
 
     Page.title = "連絡メモ"
     @css = %w(/_common/themes/gw/css/memo.css)
-    params[:limit] = 10 if request.mobile?
+    params[:limit] = 10 if false
     params[:s_send_cls] ||= '1'
     params[:s_finished] ||= '1'
   end
@@ -36,7 +36,7 @@ class Gw::Admin::MemosController < Gw::Controller::Admin::Base
 
   def new
     @item = Gw::Memo.new
-    if request.mobile? && flash[:mail_to].present?
+    if false && flash[:mail_to].present?
       @item.selected_receiver_uids = flash[:mail_to].split(',')
     end
     @item.set_tmp_id
@@ -44,7 +44,7 @@ class Gw::Admin::MemosController < Gw::Controller::Admin::Base
 
   def quote
     @item = Gw::Memo.find(params[:id])
-    if request.mobile? && flash[:mail_to].present?
+    if false && flash[:mail_to].present?
       @item.selected_receiver_uids = flash[:mail_to].split(',')
     end
   end
@@ -60,7 +60,7 @@ class Gw::Admin::MemosController < Gw::Controller::Admin::Base
 
   def edit
     @item = Gw::Memo.find(params[:id])
-    if request.mobile? && flash[:mail_to].present?
+    if false && flash[:mail_to].present?
       @item.selected_receiver_uids = flash[:mail_to].split(',')
     end
     @item.set_tmp_id

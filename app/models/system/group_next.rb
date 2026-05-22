@@ -1,4 +1,4 @@
-class System::GroupNext < ActiveRecord::Base
+class System::GroupNext < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
   include System::Model::Tree

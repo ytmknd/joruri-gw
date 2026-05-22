@@ -1,11 +1,8 @@
 class ApplicationController < ActionController::Base
 ###  include Cms::Controller::Public
-  include Jpmobile::ViewSelector
   protect_from_forgery #:secret => '1f0d667235154ecf25eaf90055d99e99'
   before_action :initialize_application #, :miniprofiler
-  after_action :inline_css_for_mobile, :mobile_access_view
   #rescue_from Exception, :with => :rescue_exception
-  trans_sid
 
   def initialize_application
 ###    mobile_view if Page.mobile? || request.mobile?
@@ -17,71 +14,6 @@ class ApplicationController < ActionController::Base
     return false if mail_fr.blank?
     return false if mail_to.blank?
     Sys::Lib::Mail::Base.deliver_default(mail_fr, mail_to, subject, message)
-  end
-
-###  def mobile_view
-###    Page.mobile = true
-###    def request.mobile
-###      Jpmobile::Mobile::Au.new(nil)
-###    end unless request.mobile?
-###  end
-
-  def mobile_access_view
-    if request.mobile?
-      if mobile_link_check == false
-        response.body = ""
-      end
-    end
-  end
-
-  def mobile_link_check
-    Gw::Controller::Mobile.link_check(Core.request_uri)
-  end
-
-  def inline_css_for_mobile
-    if request.mobile? && !request.smart_phone? && response.content_type == 'text/html'
-      begin
-        require 'tamtam'
-        response.body = TamTam.inline(
-          :css  => tamtam_css(response.body),
-          :body => response.body
-        )
-      rescue Exception => e #InvalidStyleException
-        error_log(e)
-      end
-    end
-  end
-
-  def tamtam_css(body)
-    css = ''
-    body.scan(/<link [^>]*?rel="stylesheet"[^>]*?>/i) do |m|
-      css += %Q(@import "#{m.gsub(/.*href="(.*?)".*/, '\1')}";\n)
-    end
-    4.times do
-      css = convert_css_for_tamtam(css)
-    end
-    css.gsub!(/^@.*/, '')
-    css.gsub!(/[a-z]:after/i, '-after')
-    css
-  end
-
-  def convert_css_for_tamtam(css)
-    css.gsub(/^@import .*/) do |m|
-      path = m.gsub(/^@import ['"](.*?)['"];/, '\1').gsub(/([^\?]+)\?.[^\?]+/, '\1')
-      dir  = (path =~ /^\/_common\//) ? "#{Rails.root}/public" : "#{Rails.root}/public"
-      file = "#{dir}#{path}"
-      if FileTest.exist?(file)
-        m = ::File.new(file).read.gsub(/(\r\n|\n|\r)/, "\n").gsub(/^@import ['"](.*?)['"];/) do |m2|
-          p = m2.gsub(/.*?["'](.*?)["'].*/, '\1')
-          p = ::File.expand_path(p, ::File.dirname(path)) if p =~ /^\./
-          %Q(@import "#{p}";)
-        end
-      else
-        m = ''
-      end
-      m.gsub!(/url\(\.\/(.+)\);/, "url(#{File.dirname(path)}/\\1);")
-      m
-    end
   end
 
   def send_data(data, options = {})
@@ -116,7 +48,7 @@ private
       html += exception.backtrace.join("<br />")
       html += %Q(</div>)
     end
-    render :text => html
+    render plain: html
     #render :inline => html, :layout => true, :status => 500
     #respond_to do |format|
       # format.html { render :inline => html, :layout => "base"  }
@@ -149,7 +81,7 @@ private
 
     @message = message
     return respond_to do |format|
-      #render :text => "<html><body><h1>#{message}</h1></body></html>"
+      #render plain: "<html><body><h1>#{message}</h1></body></html>"
       format.html { render(:status => status, :file => file, :layout => false) }
       format.xml  { render :xml => "<errors><error>#{status} #{message}</error></errors>" }
     end

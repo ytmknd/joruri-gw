@@ -6,7 +6,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     admin_uri = '/gw/portal'
 
     #return redirect_to(admin_uri) if logged_in?
-    if request.mobile? && params[:_session_id] == ''
+    if false && params[:_session_id] == ''
       return redirect_to admin_uri
     end
 
@@ -30,7 +30,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
       return true
     end
 
-    if request.mobile?
+    if false
       login_ok = new_login_mobile(params[:account], params[:password], params[:mobile_password])
     else
       login_ok = new_login(params[:account], params[:password])

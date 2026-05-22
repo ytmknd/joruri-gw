@@ -1,5 +1,5 @@
 require 'csv'
-class System::UsersGroupsCsvdata < ActiveRecord::Base
+class System::UsersGroupsCsvdata < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
 

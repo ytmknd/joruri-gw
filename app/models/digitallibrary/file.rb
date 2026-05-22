@@ -5,9 +5,9 @@ class Digitallibrary::File < Gwboard::CommonDb
   include Gwboard::Model::SerialNo
   include Digitallibrary::Model::Systemname
 
-  belongs_to :doc, :foreign_key => :parent_id
-  belongs_to :control, :foreign_key => :title_id
-  belongs_to :db_file, :foreign_key => :db_file_id, :dependent => :destroy
+  belongs_to :doc, optional: true, :foreign_key => :parent_id
+  belongs_to :control, optional: true, :foreign_key => :title_id
+  belongs_to :db_file, optional: true, :foreign_key => :db_file_id, :dependent => :destroy
 
   def edit_memo_path(title,item)
     return "/digitallibrary/docs/#{self.parent_id}/edit_file_memo/#{self.id}?title_id=#{self.title_id}"

@@ -1,4 +1,4 @@
-class System::CustomGroupRole < ActiveRecord::Base
+class System::CustomGroupRole < ApplicationRecord
   self.primary_key = :rid
   include System::Model::Base
   include System::Model::Base::Content

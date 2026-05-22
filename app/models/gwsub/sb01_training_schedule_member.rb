@@ -2,11 +2,11 @@ class Gwsub::Sb01TrainingScheduleMember < Gwsub::GwsubPref
   include System::Model::Base
   include System::Model::Base::Content
 
-  belongs_to :training_rel   ,:foreign_key=>'training_schedule_id'  ,:class_name=>"Gwsub::Sb01TrainingSchedule"
-  belongs_to :user_rel1      ,:foreign_key=>'training_user_id'      ,:class_name=>"System::User"
-  belongs_to :group_rel1     ,:foreign_key=>'training_group_id'     ,:class_name=>"System::Group"
-  belongs_to :user_rel2      ,:foreign_key=>'entry_user_id'         ,:class_name=>"System::User"
-  belongs_to :group_rel2     ,:foreign_key=>'entry_group_id'        ,:class_name=>"System::Group"
+  belongs_to :training_rel   ,optional: true,:foreign_key=>'training_schedule_id'  ,:class_name=>"Gwsub::Sb01TrainingSchedule"
+  belongs_to :user_rel1      ,optional: true,:foreign_key=>'training_user_id'      ,:class_name=>"System::User"
+  belongs_to :group_rel1     ,optional: true,:foreign_key=>'training_group_id'     ,:class_name=>"System::Group"
+  belongs_to :user_rel2      ,optional: true,:foreign_key=>'entry_user_id'         ,:class_name=>"System::User"
+  belongs_to :group_rel2     ,optional: true,:foreign_key=>'entry_group_id'        ,:class_name=>"System::Group"
 
   validates_presence_of     :training_group_id
   validates_presence_of     :entry_user_id

@@ -2,12 +2,12 @@ class Gwsub::Sb01TrainingScheduleProp < Gwsub::GwsubPref
   include System::Model::Base
   include System::Model::Base::Content
 
-  belongs_to :training_rel   ,:foreign_key=>'training_id'     ,:class_name=>"Gwsub::Sb01Training"
-  belongs_to :tc_rel         ,:foreign_key=>'condition_id'    ,:class_name=>"Gwsub::Sb01TrainingScheduleCondition"
-  belongs_to :user_rel       ,:foreign_key=>'member_id'       ,:class_name=>"System::User"
-  belongs_to :group_rel      ,:foreign_key=>'group_id'        ,:class_name=>"System::Group"
-  belongs_to :prop_rel       ,:foreign_key=>'prop_id'         ,:class_name=>"Gw::PropMeetingroom"
-  belongs_to :schedule       ,:foreign_key=>'schedule_id'     ,:class_name=>"Gw::Schedule"
+  belongs_to :training_rel   ,optional: true,:foreign_key=>'training_id'     ,:class_name=>"Gwsub::Sb01Training"
+  belongs_to :tc_rel         ,optional: true,:foreign_key=>'condition_id'    ,:class_name=>"Gwsub::Sb01TrainingScheduleCondition"
+  belongs_to :user_rel       ,optional: true,:foreign_key=>'member_id'       ,:class_name=>"System::User"
+  belongs_to :group_rel      ,optional: true,:foreign_key=>'group_id'        ,:class_name=>"System::Group"
+  belongs_to :prop_rel       ,optional: true,:foreign_key=>'prop_id'         ,:class_name=>"Gw::PropMeetingroom"
+  belongs_to :schedule       ,optional: true,:foreign_key=>'schedule_id'     ,:class_name=>"Gw::Schedule"
 
   validates_presence_of :training_id
   validates_presence_of :member_id

@@ -1,5 +1,5 @@
 require 'date'
-class System::Group < ActiveRecord::Base
+class System::Group < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
   include System::Model::Tree

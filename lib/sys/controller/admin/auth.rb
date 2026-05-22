@@ -9,7 +9,7 @@ protected
       reset_session
       return false
     end
-    if request.mobile?
+    if false
       expiration = Joruri.config.application['sys.session_expiration_for_mobile']
     else
       expiration = Joruri.config.application['sys.session_expiration']
@@ -132,7 +132,7 @@ protected
       accepts.xml do
         headers["Status"]           = "Unauthorized"
         headers["WWW-Authenticate"] = %(Basic realm="Web Password")
-        render :text => "Could't authenticate you", :status => '401 Unauthorized'
+        render plain: "Could't authenticate you", status: '401 Unauthorized'
       end
     end
     false

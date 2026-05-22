@@ -1,4 +1,4 @@
-class System::UsersGroup < ActiveRecord::Base
+class System::UsersGroup < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
   include System::Model::Tree

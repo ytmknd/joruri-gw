@@ -12,7 +12,7 @@ class Gwboard::Admin::Piece::NewsController < ApplicationController
     @title = gwboard_news_control(system).where(state: 'public', id: title_id).first
     return render nothing: true if @title.blank? || !@title.is_readable?
 
-    @limit_portal = request.mobile? ? 4 : 10
+    @limit_portal = false ? 4 : 10
 
     @items = @title.docs.index_select(@title).public_docs
       .order(latest_updated_at: :desc, id: :asc)

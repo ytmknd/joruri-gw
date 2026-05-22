@@ -6,7 +6,7 @@ class Digitallibrary::Category < Gwboard::CommonDb
 
   acts_as_tree order: { sort_no: :asc }
 
-  belongs_to :control, :foreign_key => :title_id
+  belongs_to :control, optional: true, :foreign_key => :title_id
 
   validates_presence_of :state, :name
 

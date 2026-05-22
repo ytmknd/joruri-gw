@@ -3,7 +3,7 @@ module Gw::Model::Hcs_notification_base_benefit
     today = Date.today
     letter = nil
 
-    setting = Hcs::NotificationUserSetting.find_by_user_code(Core.user.code) ||
+    setting = Hcs::NotificationUserSetting.find_by(user_code: Core.user.code) ||
       Hcs::NotificationUserSetting.new(:seen_reminder_option => 0, :unseen_reminder_option => 5)
 
     # 給付通知
@@ -57,7 +57,7 @@ dump ["Gw::Tool::Reminder.checker_api　Hcs_notification_base_benefit_remind_xml
     today = Date.today
     letter = nil
 
-    setting = Hcs::NotificationUserSetting.find_by_user_code(ucode) ||
+    setting = Hcs::NotificationUserSetting.find_by(user_code: ucode) ||
       Hcs::NotificationUserSetting.new(:seen_reminder_option => 0, :unseen_reminder_option => 5)
 
     # 給付通知

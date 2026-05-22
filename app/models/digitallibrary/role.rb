@@ -3,7 +3,7 @@ class Digitallibrary::Role < Gw::Database
   include System::Model::Base::Content
   include Gwboard::Model::Role::Auth
 
-  belongs_to :control, :foreign_key => :title_id
-  belongs_to :user, :foreign_key => :user_id, :class_name => 'System::User'
-  belongs_to :group, :foreign_key => :group_id, :class_name => 'System::Group'
+  belongs_to :control, optional: true, :foreign_key => :title_id
+  belongs_to :user, optional: true, :foreign_key => :user_id, :class_name => 'System::User'
+  belongs_to :group, optional: true, :foreign_key => :group_id, :class_name => 'System::Group'
 end

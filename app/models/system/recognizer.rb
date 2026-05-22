@@ -1,4 +1,4 @@
-class System::Recognizer < ActiveRecord::Base
+class System::Recognizer < ApplicationRecord
   include System::Model::Base
 
   belongs_to :user, :foreign_key => :user_id, :class_name => 'System::User'

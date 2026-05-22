@@ -1,4 +1,4 @@
-class System::PrivName < ActiveRecord::Base
+class System::PrivName < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
 

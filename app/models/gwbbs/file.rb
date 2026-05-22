@@ -5,10 +5,10 @@ class Gwbbs::File < Gwboard::CommonDb
   include Gwboard::Model::File::Base
   include Gwbbs::Model::Systemname
 
-  belongs_to :doc, :foreign_key => :parent_id
-  belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Gwbbs::Doc'
-  belongs_to :control, :foreign_key => :title_id
-  belongs_to :db_file, :foreign_key => :db_file_id, :dependent => :destroy
+  belongs_to :doc, optional: true, :foreign_key => :parent_id
+  belongs_to :parent, optional: true, :foreign_key => :parent_id, :class_name => 'Gwbbs::Doc'
+  belongs_to :control, optional: true, :foreign_key => :title_id
+  belongs_to :db_file, optional: true, :foreign_key => :db_file_id, :dependent => :destroy
 
   def item_path
     return "/gwbbs/docs?title_id=#{self.title_id}&p_id=#{self.parent_id}"

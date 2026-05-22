@@ -2,9 +2,9 @@ class Gwsub::Sb00ConferenceManager < Gwsub::GwsubPref
   include System::Model::Base
   include System::Model::Base::Content
 
-  belongs_to :fy        ,:foreign_key=>:fyear_id      ,:class_name => 'Gw::YearFiscalJp'
-  belongs_to :grp1      ,:foreign_key=>:group_id      ,:class_name => 'System::GroupHistory'
-  belongs_to :user1     ,:foreign_key=>:user_id       ,:class_name => 'System::User'
+  belongs_to :fy        ,optional: true,:foreign_key=>:fyear_id      ,:class_name => 'Gw::YearFiscalJp'
+  belongs_to :grp1      ,optional: true,:foreign_key=>:group_id      ,:class_name => 'System::GroupHistory'
+  belongs_to :user1     ,optional: true,:foreign_key=>:user_id       ,:class_name => 'System::User'
 
   validates_presence_of :fyear_id
   validates_presence_of :group_id

@@ -19,7 +19,7 @@ class Gwmonitor::Script::Annual
     #controls = Gwmonitor::Control.find_by_sql(sql)
     controls = Gwmonitor::Control.group(:section_code)
     for control in controls
-      #group = Gwboard::RenewalGroup.find_by_present_group_code(control.section_code,start_date)
+      #group = Gwboard::RenewalGroup.find_by(present_group_code: control.section_code,start_date)
       group = Gwboard::RenewalGroup.where("present_group_code = ? and start_date = ?", control.section_code,@start_date).first
       next if group.blank?
 

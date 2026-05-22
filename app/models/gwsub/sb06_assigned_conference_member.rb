@@ -3,18 +3,18 @@ class Gwsub::Sb06AssignedConferenceMember < Gwsub::GwsubPref
   include System::Model::Base::Content
 #  include Gwsub::Model::Recognition
 
-  belongs_to :c_conference ,:foreign_key=>:conference_id       ,:class_name => 'Gwsub::Sb06AssignedConference'
-  belongs_to :grp1         ,:foreign_key=>:group_id            ,:class_name => 'System::GroupHistory'
-  belongs_to :grp2         ,:foreign_key=>:user_section_id     ,:class_name => 'System::GroupHistory'
-  belongs_to :grp3         ,:foreign_key=>:main_group_id       ,:class_name => 'System::GroupHistory'
-  belongs_to :user1        ,:foreign_key=>:user_id             ,:class_name => 'System::User'
-  belongs_to :fy1          ,:foreign_key=>:fyear_id            ,:class_name => 'Gw::YearFiscalJp'
-  belongs_to :c_cat        ,:foreign_key=>:categories_id       ,:class_name => 'Gwsub::Sb06AssignedConfCategory'
-  belongs_to :c_grp        ,:foreign_key=>:conf_group_id       ,:class_name => 'Gwsub::Sb06AssignedConfGroup'
-  belongs_to :c_kind       ,:foreign_key=>:conf_kind_id        ,:class_name => 'Gwsub::Sb06AssignedConfKind'
-  belongs_to :c_item       ,:foreign_key=>:conf_item_id        ,:class_name => 'Gwsub::Sb06AssignedConfItem'
-  belongs_to :c_item_sub   ,:foreign_key=>:conf_item_sub_id    ,:class_name => 'Gwsub::Sb06AssignedConfItemSub'
-  belongs_to :o_title1     ,:foreign_key=>:official_title_id   ,:class_name => 'Gwsub::Sb06AssignedOfficialTitle'
+  belongs_to :c_conference ,optional: true,:foreign_key=>:conference_id       ,:class_name => 'Gwsub::Sb06AssignedConference'
+  belongs_to :grp1         ,optional: true,:foreign_key=>:group_id            ,:class_name => 'System::GroupHistory'
+  belongs_to :grp2         ,optional: true,:foreign_key=>:user_section_id     ,:class_name => 'System::GroupHistory'
+  belongs_to :grp3         ,optional: true,:foreign_key=>:main_group_id       ,:class_name => 'System::GroupHistory'
+  belongs_to :user1        ,optional: true,:foreign_key=>:user_id             ,:class_name => 'System::User'
+  belongs_to :fy1          ,optional: true,:foreign_key=>:fyear_id            ,:class_name => 'Gw::YearFiscalJp'
+  belongs_to :c_cat        ,optional: true,:foreign_key=>:categories_id       ,:class_name => 'Gwsub::Sb06AssignedConfCategory'
+  belongs_to :c_grp        ,optional: true,:foreign_key=>:conf_group_id       ,:class_name => 'Gwsub::Sb06AssignedConfGroup'
+  belongs_to :c_kind       ,optional: true,:foreign_key=>:conf_kind_id        ,:class_name => 'Gwsub::Sb06AssignedConfKind'
+  belongs_to :c_item       ,optional: true,:foreign_key=>:conf_item_id        ,:class_name => 'Gwsub::Sb06AssignedConfItem'
+  belongs_to :c_item_sub   ,optional: true,:foreign_key=>:conf_item_sub_id    ,:class_name => 'Gwsub::Sb06AssignedConfItemSub'
+  belongs_to :o_title1     ,optional: true,:foreign_key=>:official_title_id   ,:class_name => 'Gwsub::Sb06AssignedOfficialTitle'
 
 #  after_save :save_recognizers
 

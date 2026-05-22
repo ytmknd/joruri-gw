@@ -8,7 +8,7 @@ class Gw::Admin::TodosController < Gw::Controller::Admin::Base
     Page.title = "ToDo"
     @redirect_uri = gw_todos_path({:s_finished=>@s_finished})
     @css = %w(/_common/themes/gw/css/todo.css)
-    params[:limit] = 10 if request.mobile?
+    params[:limit] = 10 if false
   end
 
   def index
@@ -52,7 +52,7 @@ class Gw::Admin::TodosController < Gw::Controller::Admin::Base
   end
 
   def create
-    params[:item] = mobile_params(params[:item]) if request.mobile?
+    params[:item] = mobile_params(params[:item]) if false
     item = params[:item]
     @item = Gw::Todo.new(item)
     @item.class_id = 1
@@ -67,7 +67,7 @@ class Gw::Admin::TodosController < Gw::Controller::Admin::Base
 
   def update
     @item = Gw::Todo.find(params[:id])
-    params[:item] = mobile_params(params[:item]) if request.mobile?
+    params[:item] = mobile_params(params[:item]) if false
     item = params[:item]
     item[:class_id] = 1
     item[:uid] = Core.user.id

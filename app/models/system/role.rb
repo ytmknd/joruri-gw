@@ -1,5 +1,5 @@
 #require 'digest/sha1'
-class System::Role < ActiveRecord::Base
+class System::Role < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
   include Gw::Model::Cache::EditLinkPiece

@@ -1,4 +1,4 @@
-class System::LdapTemporary < ActiveRecord::Base
+class System::LdapTemporary < ApplicationRecord
   include System::Model::Base
 
   def synchro_target?

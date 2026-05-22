@@ -8,17 +8,17 @@ class System::Admin::Api::ExternalReminderController < ActionController::Base
     #dump params
 
     unless request.post?
-      return render :text => message(400, "BadRequest"), :status => 400 
+      return render plain: message(400, "BadRequest"), status: 400
     end
 
     system = Gw::ReminderExternalSystem.where(:code => params[:system]).first
 
     unless system
-      return render :text => message(400, "BadRequest"), :status => 400
+      return render plain: message(400, "BadRequest"), status: 400
     end
 
     if request.env['HTTP_X_WSSE'].blank?
-      return render :text => message(401, "Unauthorized"), :status => 401
+      return render plain: message(401, "Unauthorized"), status: 401
     end
 
     require 'wsse'
@@ -27,7 +27,7 @@ class System::Admin::Api::ExternalReminderController < ActionController::Base
     if wsse_header['name'] == system.user_id && WSSE::auth(request.env['HTTP_X_WSSE'], system.password)
       return true
     else
-      return render :text => message(403, "Forbidden"), :status => 403
+      return render plain: message(403, "Forbidden"), status: 403
     end
   end
 
@@ -40,9 +40,9 @@ class System::Admin::Api::ExternalReminderController < ActionController::Base
     item = Gw::ReminderExternal.new(attrs)
 
     if item.save
-      return render :text => message(201, "Created"), :status => 201
+      return render plain: message(201, "Created"), status: 201
     else
-      return render :text => message(400, "BadRequest"), :status => 400
+      return render plain: message(400, "BadRequest"), status: 400
     end
   end
 
@@ -53,12 +53,12 @@ class System::Admin::Api::ExternalReminderController < ActionController::Base
     item.and :member, params[:member]
     item.and :deleted_at, 'IS', nil
     item = item.find(:first)
-    return render :text => message(400, "BadRequest"), :status => 400 unless item
+    return render plain: message(400, "BadRequest"), status: 400 unless item
 
     if item.update_attribute(:deleted_at, Time.now)
-      return render :text => message(200, "OK"), :status => 200
+      return render plain: message(200, "OK"), status: 200
     else
-      return render :text => message(400, "BadRequest"), :status => 400
+      return render plain: message(400, "BadRequest"), status: 400
     end
   end
 

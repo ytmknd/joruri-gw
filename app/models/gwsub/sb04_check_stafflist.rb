@@ -2,11 +2,11 @@ class Gwsub::Sb04CheckStafflist < Gwsub::GwsubPref
   include System::Model::Base
   include System::Model::Base::Content
 
-  belongs_to  :fy_rel     ,:foreign_key=>:fyear_id      ,:class_name=>'Gw::YearFiscalJp'
+  belongs_to  :fy_rel     ,optional: true,:foreign_key=>:fyear_id      ,:class_name=>'Gw::YearFiscalJp'
 
-  belongs_to :section    ,:foreign_key=>:section_id        ,:class_name=>'Gwsub::Sb04CheckSection'
-  belongs_to :job        ,:foreign_key=>:assignedjobs_id   ,:class_name=>'Gwsub::Sb04CheckAssignedjob'
-  belongs_to :official   ,:foreign_key=>:official_title_id ,:class_name=>'Gwsub::Sb04CheckOfficialtitle'
+  belongs_to :section    ,optional: true,:foreign_key=>:section_id        ,:class_name=>'Gwsub::Sb04CheckSection'
+  belongs_to :job        ,optional: true,:foreign_key=>:assignedjobs_id   ,:class_name=>'Gwsub::Sb04CheckAssignedjob'
+  belongs_to :official   ,optional: true,:foreign_key=>:official_title_id ,:class_name=>'Gwsub::Sb04CheckOfficialtitle'
 
   validates_presence_of :section_id
   validates_presence_of :staff_no

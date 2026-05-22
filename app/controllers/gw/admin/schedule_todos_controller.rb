@@ -4,7 +4,7 @@ class Gw::Admin::ScheduleTodosController < Gw::Controller::Admin::Base
 
   def pre_dispatch
     Page.title = "ToDo"
-    params[:limit] = 10 if request.mobile?
+    params[:limit] = 10 if false
     params[:s_finished]||= "1"
     @css = %w(/_common/themes/gw/css/schedule.css /_common/themes/gw/css/todo.css)
     @sp_mode = :todo
@@ -64,9 +64,9 @@ class Gw::Admin::ScheduleTodosController < Gw::Controller::Admin::Base
     end
 
     if @item.save
-      render :text => return_str
+      render plain: return_str
     else
-      render :text => "NG"
+      render plain: "NG"
     end
   end
 end

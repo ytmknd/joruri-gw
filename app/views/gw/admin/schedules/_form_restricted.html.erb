@@ -273,7 +273,7 @@ help_links = Gw::Property::ScheduleHelpConfig.first_or_new.help_links
 
 <%
 if !params[:prop_id].blank? && params[:s_genre] == 'meetingroom'
-  _meeting_place = Gw::MeetingGuidePlace.find_by_prop_id(params[:prop_id])
+  _meeting_place = Gw::MeetingGuidePlace.find_by(prop_id: params[:prop_id])
   select_index = _meeting_place.blank? ? -1 : _meeting_place.id
 else
   select_index = -1

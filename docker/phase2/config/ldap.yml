@@ -1,0 +1,14 @@
+development:
+  host:
+  port:
+  base:
+
+test:
+  host:
+  port:
+  base:
+
+production:
+  host:
+  port:
+  base:

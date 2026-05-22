@@ -169,12 +169,12 @@ class Core
 
 ###  def self.set_concept(session, concept_id = nil)
 ###    if concept_id
-###      @@concept = Cms::Concept.find_by_id(concept_id)
+###      @@concept = Cms::Concept.find_by(id: concept_id)
 ###      @@concept = Cms::Concept.new.readable_children[0] unless @@concept
 ###      session[:cms_concept] = (@@concept ? @@concept.id : nil)
 ###    else
 ###      concept_id = session[:cms_concept]
-###      @@concept = Cms::Concept.find_by_id(concept_id)
+###      @@concept = Cms::Concept.find_by(id: concept_id)
 ###      @@concept = Cms::Concept.new.readable_children[0] unless @@concept
 ###    end
 ###  end
@@ -213,14 +213,14 @@ private
 ###      Page.site      = @@site
 ###      @@internal_uri = search_node @@request_uri.gsub(/^\/_[a-z]+\/[0-9]*(.*)/, '\1')
 ###    when 'public'
-###      @@site         = Cms::Core.find_by_script_uri(@@script_uri)
+###      @@site         = Cms::Core.find_by(script_uri: @@script_uri)
 ###      Page.site      = @@site
 ###      #if @@site.nil? && env['SCRIPT_URI'].index(Core.full_uri) == 0
 ###      #  @@site       = Cms::Core.find(:first, :order => :id)
 ###      #end
 ###      @@internal_uri = search_node @@request_uri
 ###    when 'files'
-###      @@site         = Cms::Core.find_by_script_uri(@@script_uri)
+###      @@site         = Cms::Core.find_by(script_uri: @@script_uri)
 ###      Page.site      = @@site
 ###      @@internal_uri = @@request_uri
 ###    when 'script'
@@ -233,7 +233,7 @@ private
 
 ###  def self.get_site_by_cookie
 ###    site_id = self.get_cookie('cms_site')
-###    return Cms::Core.find_by_id(site_id) if site_id
+###    return Cms::Core.find_by(id: site_id) if site_id
 ###    return Cms::Core.find(:first, :order => :id)
 ###  end
 

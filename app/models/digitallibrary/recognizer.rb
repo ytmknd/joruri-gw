@@ -4,5 +4,5 @@ class Digitallibrary::Recognizer < Gwboard::CommonDb
   include Gwboard::Model::SerialNo
   include Gwboard::Model::Recognizer::Auth
 
-  belongs_to :doc, :foreign_key => :parent_id
+  belongs_to :doc, optional: true, :foreign_key => :parent_id
 end

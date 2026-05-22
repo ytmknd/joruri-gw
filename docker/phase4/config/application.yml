@@ -1,0 +1,11 @@
+sys:
+  login_footer: ''
+  mobile_footer: ''
+  session_expiration: 24
+  session_expiration_for_mobile: 1
+  force_site: ''
+  file_encode_prefix: 'MSIE,Trident'
+  refuse_initial_password: off
+  fileupload_with_drag_and_drop: on
+air_watch:
+  download_allow_message: ''

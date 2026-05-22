@@ -1,4 +1,4 @@
-class System::RoleName < ActiveRecord::Base
+class System::RoleName < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
 

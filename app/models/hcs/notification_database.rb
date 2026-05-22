@@ -1,4 +1,4 @@
-class Hcs::NotificationDatabase < ActiveRecord::Base
+class Hcs::NotificationDatabase < ApplicationRecord
   self.abstract_class = true
   establish_connection :hcs_notification rescue nil
 end

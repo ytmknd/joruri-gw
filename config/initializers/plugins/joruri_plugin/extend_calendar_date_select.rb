@@ -8,17 +8,18 @@ if Object.const_defined?(:Rails) && File.directory?(Rails.root.to_s + "/public")
   ActionView::Base.send(:include, CalendarDateSelect::FormHelpers)
   ActionView::Base.send(:include, CalendarDateSelect::IncludesHelper)
 
-  # Filthy backwards compatibility hooks... grumble
-  if ([Rails::VERSION::MAJOR, Rails::VERSION::MINOR] <=> [2, 2]) == -1
-    ActionView::Helpers::InstanceTag.class_eval do
-      def self.new_with_backwards_compatibility(object_name, method_name, template_object, object = nil)
-        new(object_name, method_name, template_object, nil, object)
+  # ActionView::Helpers::InstanceTag was removed in Rails 4.1; skip on Rails 5+
+  if defined?(ActionView::Helpers::InstanceTag)
+    if ([Rails::VERSION::MAJOR, Rails::VERSION::MINOR] <=> [2, 2]) == -1
+      ActionView::Helpers::InstanceTag.class_eval do
+        def self.new_with_backwards_compatibility(object_name, method_name, template_object, object = nil)
+          new(object_name, method_name, template_object, nil, object)
+        end
       end
-    end
-
-  else
-    ActionView::Helpers::InstanceTag.class_eval do
-      class << self; alias new_with_backwards_compatibility new; end
+    else
+      ActionView::Helpers::InstanceTag.class_eval do
+        class << self; alias new_with_backwards_compatibility new; end
+      end
     end
   end
 

@@ -2,7 +2,7 @@ class Gwsub::Sb04section < Gwsub::GwsubPref
   include System::Model::Base
   include System::Model::Base::Content
 
-  belongs_to  :fy_rel     ,:foreign_key=>:fyear_id      ,:class_name=>'Gw::YearFiscalJp'
+  belongs_to  :fy_rel     ,optional: true,:foreign_key=>:fyear_id      ,:class_name=>'Gw::YearFiscalJp'
   has_many    :staffs  , ->{order('kana')}   ,:foreign_key=>:section_id    ,:class_name=>'Gwsub::Sb04stafflist'
 
   validates_presence_of :code

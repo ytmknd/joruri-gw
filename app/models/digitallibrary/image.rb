@@ -5,7 +5,7 @@ class Digitallibrary::Image < Gwboard::CommonDb
   include Gwboard::Model::Image::Base
   include Digitallibrary::Model::Systemname
 
-  belongs_to :doc, :foreign_key => :parent_id
-  belongs_to :control, :foreign_key => :title_id
-  belongs_to :db_file, :foreign_key => :db_file_id, :dependent => :destroy
+  belongs_to :doc, optional: true, :foreign_key => :parent_id
+  belongs_to :control, optional: true, :foreign_key => :title_id
+  belongs_to :db_file, optional: true, :foreign_key => :db_file_id, :dependent => :destroy
 end

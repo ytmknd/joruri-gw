@@ -142,7 +142,7 @@ class Gw::Admin::SchedulePropsController < Gw::Controller::Admin::Base
         .preload_schedule_relations
     end
 
-    @holidays = Gw::Holiday.find_by_range_cache(@calendar_first_day, @calendar_end_day)
+    @holidays = Gw::Holiday.find_by(range_cache: @calendar_first_day, @calendar_end_day)
   end
 
   def _schedule_day_data
@@ -217,7 +217,7 @@ class Gw::Admin::SchedulePropsController < Gw::Controller::Admin::Base
       .order(st_at: :asc, ed_at: :asc, id: :asc)
       .preload_schedule_relations
 
-    @holidays = Gw::Holiday.find_by_range_cache(@calendar_first_day, @calendar_end_day)
+    @holidays = Gw::Holiday.find_by(range_cache: @calendar_first_day, @calendar_end_day)
   end
 
   def _props

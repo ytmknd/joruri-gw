@@ -1,4 +1,4 @@
-class System::Product < ActiveRecord::Base
+class System::Product < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
 
