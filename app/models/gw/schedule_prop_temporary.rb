@@ -1,7 +1,7 @@
 class Gw::SchedulePropTemporary < Gw::Database
   include System::Model::Base
   include System::Model::Base::Content
-  include Concerns::Gw::Schedule::Prop
+  include Gw::Schedule::Prop
   belongs_to :prop, :polymorphic => true
 
   scope :rentcars, ->{where(:prop_type=>"Gw::PropRentcar")}

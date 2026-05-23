@@ -1,4 +1,4 @@
-module Concerns::Gw::Schedule::MeetingGuide
+module Gw::Schedule::MeetingGuide
   extend ActiveSupport::Concern
 
   def guide_state_label

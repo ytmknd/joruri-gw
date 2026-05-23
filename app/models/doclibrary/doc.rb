@@ -8,8 +8,8 @@ class Doclibrary::Doc < Gwboard::CommonDb
   include Gwboard::Model::Doc::Recognizer
   include Gwboard::Model::Doc::Wiki
   include Doclibrary::Model::Systemname
-  include Concerns::Doclibrary::Doc::Form001
-  include Concerns::Doclibrary::Doc::Form002
+  include Doclibrary::Doc::Form001
+  include Doclibrary::Doc::Form002
 
   has_many :files, -> { order(:id) }, :foreign_key => :parent_id, :dependent => :destroy
   has_many :images, -> { order(:id) }, :foreign_key => :parent_id, :dependent => :destroy

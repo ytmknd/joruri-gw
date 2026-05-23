@@ -1,4 +1,4 @@
-module Concerns::Gw::Upload::TmpId
+module Gw::Upload::TmpId
   extend ActiveSupport::Concern
 
   def set_tmp_id

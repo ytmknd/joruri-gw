@@ -1,4 +1,4 @@
-module Concerns::Gw::Schedule::Rentcar
+module Gw::Schedule::Rentcar
   extend ActiveSupport::Concern
   included do
     attr_accessor :tmp_repeat , :repeat_st_date_at, :repeat_ed_date_at, :meetingroom_options

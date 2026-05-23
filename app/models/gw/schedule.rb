@@ -1,8 +1,8 @@
 class Gw::Schedule < Gw::Database
   include System::Model::Base
   include System::Model::Base::Content
-  include Concerns::Gw::Schedule::MeetingGuide
-  include Concerns::Gw::Schedule::Rentcar
+  include Gw::Schedule::MeetingGuide
+  include Gw::Schedule::Rentcar
 
   validates_presence_of :title, :is_public
   validates_each :st_at do |record, attr, value|

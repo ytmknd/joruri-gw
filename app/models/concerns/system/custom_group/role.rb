@@ -1,4 +1,4 @@
-module Concerns::System::CustomGroup::Role
+module System::CustomGroup::Role
   extend ActiveSupport::Concern
 
   included do

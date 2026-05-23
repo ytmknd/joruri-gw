@@ -9,14 +9,14 @@ class Gwbbs::Doc < Gwboard::CommonDb
   include Gwboard::Model::Doc::ReadFlag
   include Gwboard::Model::Doc::Wiki
   include Gwbbs::Model::Systemname
-  include Concerns::Gwbbs::Doc::Form001
-  include Concerns::Gwbbs::Doc::Form002
-  include Concerns::Gwbbs::Doc::Form003
-  include Concerns::Gwbbs::Doc::Form004
-  include Concerns::Gwbbs::Doc::Form005
-  include Concerns::Gwbbs::Doc::Form006
-  include Concerns::Gwbbs::Doc::Form007
-  include Concerns::Gwbbs::Doc::Form009
+  include Gwbbs::Doc::Form001
+  include Gwbbs::Doc::Form002
+  include Gwbbs::Doc::Form003
+  include Gwbbs::Doc::Form004
+  include Gwbbs::Doc::Form005
+  include Gwbbs::Doc::Form006
+  include Gwbbs::Doc::Form007
+  include Gwbbs::Doc::Form009
 
   has_many :files, -> { order(:id) }, :foreign_key => :parent_id, :dependent => :destroy
   has_many :images, -> { order(:id) }, :foreign_key => :parent_id, :dependent => :destroy

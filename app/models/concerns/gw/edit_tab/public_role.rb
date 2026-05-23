@@ -1,4 +1,4 @@
-module Concerns::Gw::EditTab::PublicRole
+module Gw::EditTab::PublicRole
   extend ActiveSupport::Concern
 
   included do

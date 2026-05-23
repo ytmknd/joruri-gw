@@ -1,7 +1,7 @@
 class Gw::ScheduleProp < Gw::Database
   include System::Model::Base
   include System::Model::Base::Content
-  include Concerns::Gw::Schedule::Prop
+  include Gw::Schedule::Prop
 
   attr_accessor :_skip_destroy_actual
 

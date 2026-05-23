@@ -1,4 +1,4 @@
-module Concerns::Gw::Memo::Receiver
+module Gw::Memo::Receiver
   extend ActiveSupport::Concern
 
   included do

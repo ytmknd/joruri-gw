@@ -1,4 +1,4 @@
-module Concerns::Doclibrary::Doc::Form002
+module Doclibrary::Doc::Form002
   extend ActiveSupport::Concern
 
   included do

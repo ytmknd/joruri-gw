@@ -1,4 +1,4 @@
-module Concerns::Gwbbs::Doc::Form004
+module Gwbbs::Doc::Form004
   extend ActiveSupport::Concern
 
   included do

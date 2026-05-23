@@ -1,7 +1,7 @@
 class System::CustomGroup < ApplicationRecord
   include System::Model::Base
   include System::Model::Base::Content
-  include Concerns::System::CustomGroup::Role
+  include System::CustomGroup::Role
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'System::CustomGroup'
   has_many :children, :foreign_key => :parent_id, :class_name => 'System::CustomGroup'

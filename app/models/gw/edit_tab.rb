@@ -1,7 +1,7 @@
 class Gw::EditTab < Gw::Database
   include System::Model::Base
   include System::Model::Base::Content
-  include Concerns::Gw::EditTab::PublicRole
+  include Gw::EditTab::PublicRole
   include Util::ValidateScript
 
   acts_as_tree dependent: :destroy

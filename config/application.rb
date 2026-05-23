@@ -29,8 +29,11 @@ module JoruriGw
     # Rails 7.2 で削除されるため Phase 4 で対処する
     config.active_record.legacy_connection_handling = true if Rails::VERSION::MAJOR == 6
 
-    # Custom directories with classes and modules you want to be autoloadable.
+    # Rails 7 + Zeitwerk: lib/ の naming が Zeitwerk 非準拠のため autoload から除外
+    # (CLAUDE.md Phase 3-1 参照) — lib/ のファイルは明示的 require で管理
     config.autoload_paths += %W(#{config.root}/lib)
+    # lib/ を Zeitwerk の監視から除外（autoload_paths は互換のため残す）
+    config.watchable_dirs["#{config.root}/lib"] = [:rb]
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
@@ -53,7 +56,9 @@ module JoruriGw
       config.x[mod] = ActiveSupport::OrderedOptions.new
       Dir::glob("#{Rails.root}/config/modules/#{mod}/settings/*.yml").each do |file|
         next unless FileTest.exist?(file)
-        YAML.load_file(file)[Rails.env].each do |k, v|
+        # Ruby 3.1+ Psych 4.x: aliases: true が必要（YAML anchor/merge key 対応）
+        yaml_opts = YAML.respond_to?(:unsafe_load_file) ? {aliases: true} : {}
+        YAML.load_file(file, **yaml_opts)[Rails.env].each do |k, v|
           config.x[mod][k] = v.is_a?(Hash) ? v.with_indifferent_access : v
         end
       end

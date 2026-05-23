@@ -1,4 +1,4 @@
-module Concerns::Gw::Schedule::Prop
+module Gw::Schedule::Prop
   extend ActiveSupport::Concern
 
 

@@ -1,8 +1,8 @@
 class Gw::Memo < Gw::Database
   include System::Model::Base
   include System::Model::Base::Content
-  include Concerns::Gw::Memo::Receiver
-  include Concerns::Gw::Upload::TmpId
+  include Gw::Memo::Receiver
+  include Gw::Upload::TmpId
 
   has_many :memo_users, :foreign_key => :schedule_id, :class_name => 'Gw::MemoUser', :dependent => :destroy
   has_many :files, :foreign_key => :parent_id, :class_name => 'Gw::MemoFile', :dependent => :destroy
