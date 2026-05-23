@@ -9,7 +9,7 @@ class Sys::Lib::Logger::Base
     end
     
     @time = Time.now
-    @options[:time]    ||= @time.to_s(:db)
+    @options[:time]    ||= @time.to_fs(:db)
     @options[:type]    ||= 'Script'
     @options[:agent]   ||= 'Unknown'
     @options[:message] ||= 'Started.'

@@ -6026,4 +6026,14 @@ ActiveRecord::Schema.define(version: 20160810091516) do
     t.datetime "updated_at"
   end
 
+  # ar_sessions table for activerecord-session_store
+  create_table "ar_sessions", force: :cascade do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["session_id"], name: "index_ar_sessions_on_session_id", unique: true
+    t.index ["updated_at"], name: "index_ar_sessions_on_updated_at"
+  end
+
 end

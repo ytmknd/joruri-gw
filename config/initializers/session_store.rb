@@ -1,12 +1,6 @@
-# Be sure to restart your server when you modify this file.
+# Rails session store configuration
+# Use ActiveRecord to store sessions in ar_sessions table
+Rails.application.config.session_store :active_record_store, key: '_jorurigw_session'
 
-#Rails.application.config.session_store :cookie_store, key: '_jorurigw_session'
-
-# Use the database for sessions instead of the cookie-based default,
-# which shouldn't be used to store highly confidential information
-# (create the session table with "rails generate session_migration")
-# Rails.application.config.session_store :active_record_store
-Rails.application.config.session_store :active_record_store
-Rails.application.config.session_options = {:cookie_only => false}
-ActiveRecord::SessionStore::Session.establish_connection :session rescue nil
-ActiveRecord::SessionStore::Session.validates_presence_of :session_id
+# Phase 5: activerecord-session_store 2.x + Rails 8 compatibility
+# The Session model uses the primary database connection (no separate :session DB)

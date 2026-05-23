@@ -24,7 +24,7 @@ if Object.const_defined?(:Rails) && File.directory?(Rails.root.to_s + "/public")
   end
 
   # install files
-  if !File.exists?(Rails.root.to_s + '/public/javascripts/calendar_date_select/calendar_date_select.js') and !File.exists?(Rails.root.to_s + '/app/assets/javascripts/calendar_date_select/calendar_date_select.js')
+  if !File.exist?(Rails.root.to_s + '/public/javascripts/calendar_date_select/calendar_date_select.js') and !File.exist?(Rails.root.to_s + '/app/assets/javascripts/calendar_date_select/calendar_date_select.js')
     ['/public', '/public/javascripts/calendar_date_select', '/public/stylesheets/calendar_date_select', '/public/images/calendar_date_select', '/public/javascripts/calendar_date_select/locale'].each do |dir|
       source = File.dirname(__FILE__) + "/../#{dir}"
       dest = Rails.root.to_s + dir

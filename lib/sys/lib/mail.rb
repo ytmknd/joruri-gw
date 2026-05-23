@@ -438,86 +438,71 @@ private
     "# read failed: #{e}"
   end
 
+  # hpricot → nokogiri rewrite (Phase 5)
+  # tamtam (CSS inlining) was removed in Phase 2, so CSS inlining is skipped
+  SECURE_HTML_REMOVE_TAGS = %w[
+    applet base button bgsound embed form frame frameset head iframe
+    input isindex link meta object optgroup option param
+    script select style textarea title
+  ].freeze
+
   def secure_html_body(html_body, options = {})
     show_image = false
-    html_doc = Hpricot(html_body)
-    remove_elms = Hpricot::Elements[]
-    body_elm = nil
-    #style tag to inline style.
-    body_elm = html_doc.search('//body').first
-    if body_elm
-      body_text = body_elm.to_html
-      style_text = html_doc.search('//style/').map do |elm|
-        if elm.comment?
-          st = elm.to_html.gsub(/<!--(.*?)-->/m, '\1')
-        else
-          st = elm.inner_text
-        end
-        st.gsub!(/\/\*.*?\*\//m, ' ')
-        st.gsub!(/@(import|charset)\s+(url\(.*?\)|["'].*?["'])(\s+.*?)?;/im, ' ')
-        st.gsub!(/@(font-face|page)(\s+[^\{]+)?\s*\{[^\}]*\}/im, ' ')
-        st
-      end.join("\n").strip
-      begin
-        body_text = TamTam.inline(:css => style_text, :body => body_text)
-      rescue InvalidStyleException => e
-        error_log(e)
-      end
-      html_doc = Hpricot(body_text).search('/body').first
-    end
+    doc = Nokogiri::HTML(html_body)
 
-    html_doc.search('//').each do |elm|
-      if elm.doctype? || elm.comment? || elm.class == Hpricot::CData
-        remove_elms << elm
+    # Use body content if available
+    body = doc.at_css('body') || doc
+    working_doc = Nokogiri::HTML(body.inner_html)
+
+    working_doc.traverse do |node|
+      next unless node.element?
+
+      tag = node.name.downcase
+
+      if SECURE_HTML_REMOVE_TAGS.include?(tag)
+        node.remove
         next
       end
-      next unless elm.elem?
-      style = elm['style']
-      if style
-        elm['style'] = style = style.gsub(/\/\*.*?\*\//m, ' ').gsub(/[\r\n]/, ' ').strip
+
+      # Remove dangerous style attributes
+      if (style = node['style'])
+        style = style.gsub(/\/\*.*?\*\//m, ' ').gsub(/[\r\n]/, ' ').strip
         if style =~ /[:\s]expression\(/i || style =~ /(^|;)[^:]*?behavior\s*:/i
-          elm.remove_attribute('style')
+          node.remove_attribute('style')
+        else
+          style.gsub!(/(\A|\s)((position|top|left|display)\s*:\s*\w+\s*;)/i, '\1')
+          node['style'] = style
         end
       end
-      if style = elm['style']
-        style.gsub!(/(\A|\s)((position|top|left|display)\s*:\s*\w+\s*;)/i, '\1')
-        elm.set_attribute('style', style)
-      end
-      elm.attributes.to_hash.each do |k, v|
-        elm.remove_attribute(k) if k =~ /^on/i
-      end
-      elm.remove_attribute('id') if elm['id']
-      elm.remove_attribute('class') if elm['class']
-      case elm.pathname
-      when 'applet', 'base', 'button', 'bgsound', 'embed', 'form', 'frame', 'frameset', 'head', 'iframe',
-        'input', 'isindex', 'link', 'meta', 'object', 'optgroup', 'option', 'param',
-        'script', 'select', 'style', 'textarea', 'title'
-        remove_elms << elm
-        next
+
+      # Remove event handlers and id/class
+      node.attributes.each_key { |k| node.remove_attribute(k) if k =~ /^on/i }
+      node.remove_attribute('id')
+      node.remove_attribute('class')
+
+      case tag
       when 'a', 'area'
-        elm['target'] = '_blank'
-        elm.remove_attribute('href') if elm['href'] && elm['href'].strip =~ /^\w+?script:/i
+        node['target'] = '_blank'
+        node.remove_attribute('href') if node['href']&.strip =~ /^\w+?script:/i
       when 'img'
-        elm.remove_attribute('src') if elm['src'] && elm['src'].strip =~ /^\w+?script:/i
+        node.remove_attribute('src') if node['src']&.strip =~ /^\w+?script:/i
       end
+
       unless options[:show_image]
-        style = elm['style']
-        elm['style'] = style.gsub(/([:\s])url\(.*?\)/i) do |match|
-          show_image = true
-          "#{$1}url()"
-        end if style
-        case elm.pathname
-        when 'img'
-          if elm['src']
+        if (style = node['style'])
+          node['style'] = style.gsub(/([:\s])url\(.*?\)/i) do
             show_image = true
-            elm.remove_attribute('src')
+            "#{$1}url()"
           end
         end
+        if tag == 'img' && node['src']
+          show_image = true
+          node.remove_attribute('src')
+        end
       end
     end
-    remove_elms.remove
 
-    [html_doc.inner_html, show_image]
+    [working_doc.at_css('body')&.inner_html || '', show_image]
   end
 
   def block_quote(html)

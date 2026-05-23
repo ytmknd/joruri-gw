@@ -796,7 +796,7 @@ class Gw
   end
 
   def self.dir_exists?(path)
-    File.exists?(path) && File::ftype(path) == "directory"
+    File.exist?(path) && File::ftype(path) == "directory"
   end
 
   def self.load_yaml_files_cache(glob = nil)

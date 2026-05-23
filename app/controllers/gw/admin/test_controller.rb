@@ -100,7 +100,7 @@ class Gw::Admin::TestController < ApplicationController
     case mode
     when 'file'
       tmp_filename = session[:senddownload][:tmp_filename]
-      raise IOError unless File.exists? tmp_filename
+      raise IOError unless File.exist? tmp_filename
       stream = open(tmp_filename) {|f| f.read}
       FileUtils.rm tmp_filename
     when 'session'

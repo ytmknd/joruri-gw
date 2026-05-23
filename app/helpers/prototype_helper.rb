@@ -100,7 +100,7 @@ module PrototypeHelper
     #
     #   module ApplicationHelper
     #     def update_time
-    #       page.replace_html 'time', Time.now.to_s(:db)
+    #       page.replace_html 'time', Time.now.to_fs(:db)
     #       page.visual_effect :highlight, 'time'
     #     end
     #   end
