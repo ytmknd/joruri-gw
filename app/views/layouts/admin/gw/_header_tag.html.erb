@@ -12,12 +12,10 @@ js_ret=''
 controller_js.each{|x|js_ret += javascript_include_tag(x)+"\n"};
 %>
 <%=raw(js_ret)%>
-<script src="/javascripts/calendar_date_select/calendar_date_select.js" type="text/javascript"></script>
-<script src="/javascripts/calendar_date_select/format_db.js" type="text/javascript"></script>
-<script src="/javascripts/calendar_date_select/locale/ja.js" type="text/javascript"></script>
+<%# calendar_date_select (Prototype.js 依存) は Phase 5 で除去 — flatpickr への移行は次フェーズ %>
 <%
 controller_css = @css ||  []
-@css = %w(/stylesheets/calendar_date_select/default.css) + controller_css
+@css = controller_css
 
 css_ret=''
 @css.each{|x|css_ret+=stylesheet_link_tag(x, :media=>:all)+"\n"};
