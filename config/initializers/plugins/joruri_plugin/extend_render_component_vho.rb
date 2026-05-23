@@ -19,7 +19,7 @@ module RenderComponent
             request_env["action_dispatch.request.parameters"] = request_params.with_indifferent_access
             request_env["action_dispatch.request.path_parameters"] = Hash[request_params.select{|key, value| [:controller, :action].include?(key)}].with_indifferent_access
             request_env["warden"] = request.env["warden"] if (request.env.has_key?("warden"))
-            request_env["rack.jpmobile"] = request.mobile
+            # rack.jpmobile removed (jpmobile gem deleted in Phase 2)
             request_env["rack.session.options"] = request.session_options
             component_request = ActionDispatch::Request.new(request_env)
             # its an internal request request forgery protection has to be disabled
@@ -52,3 +52,7 @@ module RenderComponent
 end
 
 ActionController::Base.send :include, RenderComponent::Components
+
+# alias_method_chain :flash, :render_component makes flash private in Rails 6+.
+# Restore public visibility so views can call flash[:notice] normally.
+ActionController::Base.send(:public, :flash)

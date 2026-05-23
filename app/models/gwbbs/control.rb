@@ -14,10 +14,10 @@ class Gwbbs::Control < Gw::Database
   has_many :files, :foreign_key => :title_id
 
   after_validation :set_icon_file_fields
-  before_create :set_notes_field_for_form002, :if => "form_name == 'form002'"
-  before_create :set_notes_field_for_form003, :if => "form_name == 'form003'"
-  before_create :set_notes_field_for_form006, :if => "form_name == 'form006'"
-  before_create :set_notes_field_for_form007, :if => "form_name == 'form007'"
+  before_create :set_notes_field_for_form002, :if => -> { form_name == 'form002' }
+  before_create :set_notes_field_for_form003, :if => -> { form_name == 'form003' }
+  before_create :set_notes_field_for_form006, :if => -> { form_name == 'form006' }
+  before_create :set_notes_field_for_form007, :if => -> { form_name == 'form007' }
   before_save :set_icon_and_wallpaper_path
   after_save :board_css_create
 

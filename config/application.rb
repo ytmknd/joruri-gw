@@ -2,6 +2,15 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
+# alias_method_chain was removed in Rails 5.2.
+# render_component_vho 3.2.1 calls it during gem load — restore it before Bundler.require.
+unless Module.method_defined?(:alias_method_chain)
+  Module.define_method(:alias_method_chain) do |target, feature|
+    alias_method :"#{target}_without_#{feature}", target
+    alias_method target, :"#{target}_with_#{feature}"
+  end
+end
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -15,6 +24,10 @@ module JoruriGw
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    # Rails 6.1: activerecord-session_store が legacy connection handling を必要とする
+    # Rails 7.2 で削除されるため Phase 4 で対処する
+    config.active_record.legacy_connection_handling = true if Rails::VERSION::MAJOR == 6
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/lib)

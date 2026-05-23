@@ -19,12 +19,21 @@ class AdminLoginTest < ActionDispatch::IntegrationTest
   end
 
   test "admin can authenticate with correct credentials" do
-    post "/_admin/login", account: 'admin', password: 'admin'
+    # Rails 5+: use params: keyword; Rails 4: positional hash — detect at runtime
+    if Rails::VERSION::MAJOR >= 5
+      post "/_admin/login", params: {account: 'admin', password: 'admin'}
+    else
+      post "/_admin/login", account: 'admin', password: 'admin'
+    end
     assert_response :redirect
   end
 
   test "wrong password stays on login page" do
-    post "/_admin/login", account: 'admin', password: 'wrong'
+    if Rails::VERSION::MAJOR >= 5
+      post "/_admin/login", params: {account: 'admin', password: 'wrong'}
+    else
+      post "/_admin/login", account: 'admin', password: 'wrong'
+    end
     assert_response :success
   end
 end

@@ -15,7 +15,7 @@ class System::LoginLog < ApplicationRecord
     if (list = user.logins).size > 10
       delete_all(['user_id = ? and id < ?', user.id, list[9].id])
     end
-    user.logins(true)
+    user.logins.reload
   end
 
   def login_at

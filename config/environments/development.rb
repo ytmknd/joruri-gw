@@ -1,6 +1,11 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Rails 6.0+ HostAuthorization: allow localhost, integration test host, and Docker container hostname
+  config.hosts << "localhost"
+  config.hosts << "www.example.com"  # ActionDispatch::Integration::Session default
+  config.hosts << /\Aapp[-\w]*\z/    # Docker service names
+
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
@@ -38,7 +43,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Cache
-  config.cache_store = :dalli_store, 'localhost:11211', {
+  config.cache_store = :mem_cache_store, 'localhost:11211', {
     :namespace => "jorurigw",
     :expires_in => 3600
   }

@@ -7,3 +7,5 @@ Rails.application.config.active_record.belongs_to_required_by_default = false
 
 # Rails 5 から :sorted が :random に変更される警告を抑制
 Rails.application.config.active_support.test_order = :random
+
+    # Rails 6.1+: legacy_connection_handling は application.rb で設定済み
