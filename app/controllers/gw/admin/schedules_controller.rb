@@ -156,7 +156,7 @@ class Gw::Admin::SchedulesController < Gw::Controller::Admin::Base
       schedule_props.present? && schedule_props.all?(&:cancelled?)
     }
 
-    @holidays = Gw::Holiday.find_by(range_cache: @calendar_first_day, @calendar_end_day)
+    @holidays = Gw::Holiday.find_by_range_cache(@calendar_first_day, @calendar_end_day)
   end
 
   def _month_date

@@ -33,7 +33,7 @@ class Gwqa::Doc < Gwboard::CommonDb
     f.validates :title, presence: { message: "を入力してください。" }, if: :doc_type_question?
     f.validates :section_code, presence: { message: "記事管理課を選択してください。" }, if: :doc_type_question?
     f.validates :section_code, presence: { message: "編集可能所属を選択してください。" }, if: :doc_type_answer?
-    f.validates :category1_id, presence: { message: "を設定してください。" }, if: "doc_type_question? && category_use?"
+    f.validates :category1_id, presence: { message: "を設定してください。" }, if: -> { doc_type_question? && category_use? }
   end
 
   scope :public_docs, -> { where(state: 'public') }

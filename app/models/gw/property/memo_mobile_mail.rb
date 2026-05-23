@@ -1,8 +1,8 @@
 class Gw::Property::MemoMobileMail < Gw::UserProperty
   default_scope { where(self.new.default_attributes) }
 
-  validates :kmail, presence: true, if: "ktrans == '1'"
-  validate :validate_email, if: "ktrans == '1'"
+  validates :kmail, presence: true, if: -> { ktrans == '1' }
+  validate :validate_email, if: -> { ktrans == '1' }
 
   def default_attributes
     { class_id: 1, name: "mobile", type_name: "json" }

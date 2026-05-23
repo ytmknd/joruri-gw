@@ -16,7 +16,7 @@ module RenderComponent
       if response.redirect_url
         redirect_to response.redirect_url
       else
-        render text: response.body, status: response.status
+        render plain: response.body, status: response.status
         response
       end
     end
@@ -31,8 +31,10 @@ module RenderComponent
     def component_response(options)
       controller = "#{options[:controller].to_s.camelize}Controller".constantize.new
       component_request = request_for_component(controller.controller_path, options)
-      status, headers, body = controller.dispatch(options[:action], component_request)
-      [status, headers, controller.response]
+      # Rails 8: dispatch takes (action, request, response) — 3 args
+      component_response = ActionDispatch::Response.new
+      controller.dispatch(options[:action], component_request, component_response)
+      [component_response.status, component_response.headers, controller.response]
     end
 
     def request_for_component(_controller_path, options)
