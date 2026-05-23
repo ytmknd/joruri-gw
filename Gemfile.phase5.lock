@@ -89,8 +89,6 @@ GEM
     brakeman (8.0.4)
       racc
     builder (3.3.0)
-    calendar_date_select (2.0.0)
-      rails (>= 3.1)
     capistrano (3.20.1)
       airbrussh (>= 1.0.0)
       i18n
@@ -366,7 +364,6 @@ DEPENDENCIES
   acts_as_tree (~> 2.9)
   atomutil (~> 0.1.4)
   brakeman
-  calendar_date_select (= 2.0.0)
   capistrano (~> 3.18)
   capistrano-rails
   coffee-rails (~> 5.0)

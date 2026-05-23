@@ -76,7 +76,10 @@ class Core
 
   ## Parses query string.
   def self.parse_query_string(env)
-    env['QUERY_STRING'] ? CGI.parse(env['QUERY_STRING']) : nil
+    # CGI.parse removed in Ruby 4.0; use URI.decode_www_form instead
+    qs = env['QUERY_STRING']
+    return nil unless qs&.present?
+    URI.decode_www_form(qs).each_with_object({}) { |(k, v), h| (h[k] ||= []) << v }
   end
 
 ###  ## Sets the mode.

@@ -10,7 +10,9 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-//= require prototype
+// prototype removed — calendar_date_select replaced with flatpickr
+//= require flatpickr.min
+//= require flatpickr-l10n-ja
 //= require dateformat
 //= require jquery
 //= require jquery_ujs

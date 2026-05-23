@@ -22,7 +22,7 @@ gem 'icalendar', '~> 2.10'
 gem 'render_component_vho', '3.2.1'
 gem 'dalli', '~> 3.2'
 gem 'acts_as_tree', '~> 2.9'
-gem 'calendar_date_select', '2.0.0'
+# calendar_date_select removed — replaced with flatpickr (Phase 5)
 gem 'validates_email_format_of', '~> 1.6'
 gem 'wsse', '~> 0.0.2'
 gem 'delayed_job_active_record', '~> 4.1'

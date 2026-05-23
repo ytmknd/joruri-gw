@@ -170,92 +170,63 @@ module FormHelper
     return a_cbs.html_safe
   end
 
-  def date_picker3(f, name, value=nil, options={})
+  # date_picker3: flatpickr ベースの日付入力フィールド（calendar_date_select を置き換え）
+  def date_picker3(f, name, value = nil, options = {})
     object_name = f.is_a?(ActionView::Helpers::FormBuilder) ? f.object_name : f.to_s
     tag_name = "#{object_name}[#{name}]" rescue name
-    options[:id] = Gw.name_to_id(tag_name)
-    options[:format] = :db
-    options[:image] = '/_common/themes/gw/files/icon/ic_act_calendar.gif'
-    options[:embedded] = false if options[:embedded].blank?
-    options[:time] = true if options[:time].nil?
-    options[:style] = 'width:10em; ime-mode: disabled;' if options[:style].blank?
-    this_year = Date.today.year
-    options[:year_range] = (((this_year - 5)..(this_year + 5))).to_a if options[:year_range].blank?
-    err_flg = options[:errors].nil? ? nil : options[:errors][name].first
-    options.delete :errors
-    ret = calendar_date_select_tag tag_name, value, options
-    ret = %Q(<span class="field_with_errors">#{ret}</span>) if !err_flg.nil?
-    ret.html_safe
+    err_flg  = options.delete(:errors)&.dig(name)&.first
+    mode     = options.delete(:time) == false ? 'date' : 'datetime'
+
+    display_value = format_flatpickr_value(value, mode)
+    field = text_field_tag(tag_name, display_value,
+      id:           Gw.name_to_id(tag_name),
+      style:        options[:style] || 'width:10em;',
+      data:         { flatpickr: mode },
+      autocomplete: 'off')
+    field = %Q(<span class="field_with_errors">#{field}</span>) if err_flg
+    field.html_safe
   end
 
-  def date_picker_prop(f, name, _options={})
+  # date_picker_prop: flatpickr ベース（calendar_date_select を置き換え）
+  def date_picker_prop(f, name, _options = {})
     options = HashWithIndifferentAccess.new(_options)
-    value = nz(options[:value], Time.now)
-    value = Gw.to_time(value) if value.is_a?(String)
-    mode = nz(options[:mode], :datetime).to_s
-    object_name = f.is_a?(ActionView::Helpers::FormBuilder) ? f.object_name : f.to_s
-    tag_name = "#{object_name}[#{name}]" rescue name
-    tag_id = Gw.idize(tag_name)
-    this_year = Date.today.year
-    years_a = nz(options[:years_range], ((this_year - 5)..(this_year + 5))).to_a
-    err_flg = options[:errors].nil? ? nil : options[:errors][name].first
-    options.delete :errors
+    value   = nz(options[:value], Time.now)
+    value   = Gw.to_time(value) if value.is_a?(String)
+    mode    = nz(options[:mode], :datetime).to_s
     minute_interval = nz(options[:minute_interval], 15).to_i rescue 15
     minute_interval = 15 if minute_interval <= 0
 
-    captions_default = ['','年','月','日','−','時','分', '']
-    captions = options[:captions].nil? ? captions_default :
-      Array.new(6){|i| options[:captions][i].nil? ? captions_default[i] : options[:captions][i]}
-    captions_ind = captions[1,3] + captions[5,2]
-    captions_caption = [captions[0], captions[4], captions[7]]
+    err_flg = options[:errors].nil? ? nil : options[:errors][name].first
 
-    ret = ''
+    object_name = f.is_a?(ActionView::Helpers::FormBuilder) ? f.object_name : f.to_s
+    tag_name = "#{object_name}[#{name}]" rescue name
 
-    options_calendar_date_select = {
-      :hidden => 1, :id=>tag_id, :time=> !%w(time datetime).index(mode).nil?, :minute_interval=>30,
-      :onchange => "update_#{tag_id}_from_calendar();",
-      :image=>'/_common/themes/gw/files/icon/ic_act_calendar.gif',
-      :clear_button => false
-    }
-    datetime_part = lambda{|idx, _select_options_a, selected|
-      select_options_a = _select_options_a.is_a?(Array) ? _select_options_a : _select_options_a.to_a
-      _name = "#{object_name}[#{name}(#{idx}i)]"
-      select_tag(_name, mock_for_select(select_options_a, :value_as_label=>1, :to_s=>1, :selected=>selected),
-          :id=>Gw.idize(_name), :onchange=> "update_#{tag_id}();") +
-        captions_ind[idx - 1]
-    }
-    init_tag_name = "init[#{name}][mode]"
-    ret += <<-EOL
-#{hidden_field_tag(init_tag_name, "#{mode}")}
-#{captions_caption[0]}
-EOL
-    if !%w(date datetime).index(mode).nil?
-      ret += datetime_part.call 1, years_a, value.year
-      ret += datetime_part.call 2, 1..12, value.month
-      ret += datetime_part.call 3, 1..31, value.day
-    end
-    ret += captions_caption[1] if !%w(datetime).index(mode).nil?
-    if !%w(time datetime).index(mode).nil?
-      ret += datetime_part.call 4, 0..23, value.hour
+    display_value = format_flatpickr_value(value, mode)
 
-      _selected_min = value.min
-      minute_array = []
-      _min_cnt = 0
-      while _min_cnt < 60
-        minute_array << _min_cnt
-        _min_cnt += minute_interval
-      end
-
-      ret += datetime_part.call 5, minute_array, _selected_min
-
-    end
-    ret += captions_caption[2]
-    ret += !%w(date datetime).index(mode).nil? ?
-      "<span id=\"#{tag_id}_calendar\">" + calendar_date_select_tag(tag_name, value, options_calendar_date_select) + "</span>" :
-      hidden_field_tag(tag_name, Gw.time_str(value))
-    ret = %Q(<span class="field_with_errors">#{ret}</span>) if !err_flg.nil?
-    ret.html_safe
+    field = f.text_field(name.to_sym,
+      value:        display_value,
+      data:         { flatpickr: mode, 'minute-interval': minute_interval.to_s },
+      autocomplete: 'off')
+    field = %Q(<span class="field_with_errors">#{field}</span>) if err_flg
+    field.html_safe
   end
+
+  private
+
+  def format_flatpickr_value(value, mode)
+    return '' if value.blank?
+    v = value.is_a?(String) ? Gw.to_time(value) : value
+    return '' unless v
+    case mode.to_s
+    when 'date'     then v.strftime('%Y-%m-%d')
+    when 'time'     then v.strftime('%H:%M')
+    else                 v.strftime('%Y-%m-%d %H:%M')
+    end
+  rescue
+    value.to_s
+  end
+
+  public
 
   def form_text_area(form, name, options = {})
     opt = options.dup
