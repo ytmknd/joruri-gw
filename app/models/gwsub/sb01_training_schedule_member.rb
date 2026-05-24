@@ -47,7 +47,7 @@ class Gwsub::Sb01TrainingScheduleMember < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v,:updated_user
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

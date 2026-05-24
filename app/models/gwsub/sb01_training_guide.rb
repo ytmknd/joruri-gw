@@ -189,7 +189,7 @@ class Gwsub::Sb01TrainingGuide  < Gwsub::GwsubPref
       when 'g_id'
         search_id v,:group_id unless (v.to_s == '0' || v.to_s == nil)
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

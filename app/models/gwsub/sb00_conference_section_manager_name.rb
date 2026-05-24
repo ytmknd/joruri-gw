@@ -47,7 +47,7 @@ class Gwsub::Sb00ConferenceSectionManagerName < Gwsub::GwsubPref
       when 'gid'
         search_id v,:gid unless v.to_i==0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

@@ -29,7 +29,7 @@ class Gw::SectionAdminMaster < Gw::Database
       when 's_d_gid'
         search_id2 v.to_i, :division_parent_gid,:division_gid  unless v.to_i == 0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

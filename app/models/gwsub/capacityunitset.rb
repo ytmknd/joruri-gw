@@ -49,7 +49,7 @@ class Gwsub::Capacityunitset < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v, :name,:code
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

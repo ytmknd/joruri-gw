@@ -69,7 +69,7 @@ class Gwsub::Sb04CheckSection < Gwsub::GwsubPref
       when 'grped_id'
         search_id v,:id if v.to_i != 0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

@@ -141,7 +141,7 @@ class Gwsub::Sb06BudgetAssignMain < Gwsub::GwsubPref
       when 'multi_group_id'
         search_id v,:multi_group_id unless v.to_i==0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

@@ -73,7 +73,7 @@ class Gwsub::Sb06AssignedConfCategory < Gwsub::GwsubPref
       case n
       when 's_keyword'
         search_keyword v,:cat_code,:cat_name
-      end if params.size != 0
+      end if params.present?
     end
 
     return self

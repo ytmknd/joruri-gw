@@ -47,7 +47,7 @@ class Gwsub::Externalmediakind < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v, :kind,:name,:sort_order,:sort_order_int
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

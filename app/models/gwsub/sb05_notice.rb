@@ -44,7 +44,7 @@ class Gwsub::Sb05Notice < Gwsub::GwsubPref
       when 'media_code'
         search_id v, :media_code if v.to_i != 0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

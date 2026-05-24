@@ -137,7 +137,7 @@ class Gwsub::Sb04CheckStafflist < Gwsub::GwsubPref
       when 'grped_id'
         search_id v,:section_id unless v.to_i == 0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

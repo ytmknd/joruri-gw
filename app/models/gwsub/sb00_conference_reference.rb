@@ -45,7 +45,7 @@ class Gwsub::Sb00ConferenceReference < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v,:fyear_markjp,:title
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

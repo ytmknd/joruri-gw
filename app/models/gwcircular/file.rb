@@ -15,7 +15,7 @@ class Gwcircular::File < Gw::Database
       when 'kwd'
         and_keywords v, :filename
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

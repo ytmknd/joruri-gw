@@ -82,7 +82,7 @@ class System::UsersGroup < ApplicationRecord
         when 'job'
         search_id v, :job_order
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

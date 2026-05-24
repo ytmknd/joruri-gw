@@ -80,7 +80,7 @@ class Gwsub::Sb06AssignedHelp < Gwsub::GwsubPref
       when 'fy_id'
         search_id v,:fyear_id if v.to_i != 0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

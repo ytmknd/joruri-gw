@@ -47,7 +47,7 @@ class Gwsub::Sb06BudgetEditableDate < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v,:start_at,:end_at
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

@@ -492,7 +492,7 @@ class Gwsub::Sb05Request < Gwsub::GwsubPref
 #      when 'start_at'
 #        search_keyword v, :start_at
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

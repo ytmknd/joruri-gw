@@ -146,7 +146,7 @@ class Gw::ScheduleProp < Gw::Database
         prop_type = "Gw::Prop#{v.capitalize}"
         ret_a.push "prop_type='#{prop_type}'"
       end
-    end if params.size != 0
+    end if params.present?
     return ret_a.collect{|x| "(#{x})"}.join(" and ")
   end
 

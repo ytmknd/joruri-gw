@@ -52,7 +52,7 @@ class Gwsub::Sb06BudgetNotice < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v,:title,:bbs_url,:remarks
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

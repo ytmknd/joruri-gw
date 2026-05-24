@@ -21,7 +21,7 @@ class System::GroupHistory < ApplicationRecord
       when 's_keyword'
         search_keyword v, :code,:name,:name_en,:e_main
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

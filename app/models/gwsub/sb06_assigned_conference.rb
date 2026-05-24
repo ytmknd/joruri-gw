@@ -221,7 +221,7 @@ class Gwsub::Sb06AssignedConference < Gwsub::GwsubPref
 #      when 'user_id'
 #        search_id v,:user_id unless v.to_i==0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

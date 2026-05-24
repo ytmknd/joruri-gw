@@ -132,7 +132,7 @@ class Gwsub::Sb06BudgetRole < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v,:code,:name
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

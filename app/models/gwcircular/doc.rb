@@ -171,7 +171,7 @@ class Gwcircular::Doc < Gw::Database
       when 'kwd'
         and_keywords v, :title, :body
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

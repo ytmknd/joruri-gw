@@ -306,7 +306,7 @@ class Gwsub::Sb04stafflist < Gwsub::GwsubPref
       when 'multi_section'
         search_keyword v,:multi_section_flg if v == '1'
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

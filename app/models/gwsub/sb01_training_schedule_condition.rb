@@ -321,7 +321,7 @@ class Gwsub::Sb01TrainingScheduleCondition < Gwsub::GwsubPref
       when 'p_id'
         search_equal v,:prop_id unless (v.to_s == '0' || v.to_s == nil)
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

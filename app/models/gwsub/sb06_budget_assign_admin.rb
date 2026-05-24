@@ -146,7 +146,7 @@ class Gwsub::Sb06BudgetAssignAdmin < Gwsub::GwsubPref
       when 'a_state'
         search_id v,:admin_state unless v.to_i==0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

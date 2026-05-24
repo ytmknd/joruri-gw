@@ -131,7 +131,7 @@ class Gwsub::Externalusb < Gwsub::GwsubPref
         end
         search_keyword2 v, :new_registedno,:registedno,:equipmentname,:sendstate,:user,:remarks
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

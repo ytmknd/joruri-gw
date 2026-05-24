@@ -73,7 +73,7 @@ class System::Role < ApplicationRecord
       when 'priv_id'
         search_id v,:priv_user_id unless (v.to_s == '0' || v.to_s == nil)
       end
-    end if params.size != 0
+    end if params.present?
     return self
   end
 

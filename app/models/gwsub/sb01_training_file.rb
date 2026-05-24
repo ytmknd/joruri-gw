@@ -38,7 +38,7 @@ class Gwsub::Sb01TrainingFile < Gwsub::GwsubPref
       when 'kwd'
         search_keyword v, :filename
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

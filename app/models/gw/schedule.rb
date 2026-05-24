@@ -590,7 +590,7 @@ class Gw::Schedule < Gw::Database
   def search(params)
     params.each do |n, v|
       next if v.to_s == ''
-      end if params.size != 0
+      end if params.present?
     return self
   end
 

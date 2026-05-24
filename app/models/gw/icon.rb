@@ -11,7 +11,7 @@ class Gw::Icon < Gw::Database
       when 'igid'
        self.and :icon_gid, v
       end
-    end if params.size != 0
+    end if params.present?
     return self
   end
 end

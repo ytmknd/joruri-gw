@@ -43,7 +43,7 @@ class Gwsub::Sb04CheckOfficialtitle < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v,:code,:name,:remarks
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

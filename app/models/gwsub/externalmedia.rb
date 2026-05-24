@@ -150,7 +150,7 @@ class Gwsub::Externalmedia < Gwsub::GwsubPref
         end
         search_keyword2 v, :new_registedno,:registed_at,:registedno,:equipmentname,:user,:ending_at,:remarks
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

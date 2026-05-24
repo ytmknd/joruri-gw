@@ -38,7 +38,7 @@ class Gwsub::Sb04help < Gwsub::GwsubPref
       case n
       when 's_keyword'
         search_keyword v,:title,:bbs_url,:remarks
-      end if params.size != 0
+      end if params.present?
     end
     return self
   end

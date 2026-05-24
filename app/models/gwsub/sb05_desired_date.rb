@@ -65,7 +65,7 @@ class Gwsub::Sb05DesiredDate < Gwsub::GwsubPref
       when 'm_cd'
         search_id v.to_s, :media_code unless (v.to_s == '0' || v.to_s.blank? )
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

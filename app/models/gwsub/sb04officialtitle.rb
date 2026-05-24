@@ -109,7 +109,7 @@ class Gwsub::Sb04officialtitle < Gwsub::GwsubPref
       when 'fyed_id'
         search_id v,:fyear_id if v.to_i != 0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

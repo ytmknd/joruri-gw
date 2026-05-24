@@ -86,7 +86,7 @@ class Gwsub::Sb06AssignedConfGroup < Gwsub::GwsubPref
       when 'group_id'
         search_id v,:group_id unless v.to_i==0
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end

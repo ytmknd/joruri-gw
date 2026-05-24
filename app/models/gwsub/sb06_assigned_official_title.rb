@@ -43,7 +43,7 @@ class Gwsub::Sb06AssignedOfficialTitle < Gwsub::GwsubPref
       when 's_keyword'
         search_keyword v,:official_title_code,:official_title_name
       end
-    end if params.size != 0
+    end if params.present?
 
     return self
   end
