@@ -11,7 +11,7 @@ class Gwbbs::Admin::ItemdeletesController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:page).symbolize_keys) 
+    super.merge(params.slice(:page).to_unsafe_h.symbolize_keys)
   end
 
   def index

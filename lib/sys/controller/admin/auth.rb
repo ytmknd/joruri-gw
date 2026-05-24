@@ -1,7 +1,7 @@
 module Sys::Controller::Admin::Auth
   ACCOUNT_KEY = :sys_user_account
   PASSWD_KEY  = :sys_user_password
-  @@current_user = false
+  HTTP_AUTH_HEADERS = %w(X-HTTP_AUTHORIZATION HTTP_AUTHORIZATION Authorization).freeze
 
 protected
   def logged_in?
@@ -24,7 +24,7 @@ protected
     session[ACCOUNT_KEY]  = user.code
     session[PASSWD_KEY] = user.encrypt_password
     System::LoginLog.put_log(user)
-    @@current_user = user
+    self.current_user = user
   end
 
 
@@ -46,7 +46,7 @@ protected
       session[:user_mobile_password] = user.mobile_password
       session[:recent_mail] = get_recents(user.code, user.password,user.mobile_password)
       System::LoginLog.put_log(user)
-      @@current_user = user
+      self.current_user = user
       return true
     else
       return false
@@ -60,7 +60,7 @@ protected
   end
 
   def set_current_user(user)
-    @@current_user = user
+    self.current_user = user
 
     session[ACCOUNT_KEY] = user.code
     session[PASSWD_KEY] = user.encrypt_password
@@ -69,14 +69,18 @@ protected
   end
 
   def current_user
-    return @@current_user if @@current_user
+    return @current_user if @current_user
     return false if (!session[ACCOUNT_KEY] || !session[PASSWD_KEY])
     unless user = System::User.where(state: 'enabled', code: session[ACCOUNT_KEY]).first
       unless user = System::User.authenticate(session[ACCOUNT_KEY], session[PASSWD_KEY], true)
         return false
       end
     end
-    @@current_user = user
+    self.current_user = user
+  end
+
+  def current_user=(user)
+    @current_user = (user == :false ? false : user)
   end
 
   # Check if the user is authorized.
@@ -172,10 +176,9 @@ protected
   end
 
 private
-  @@http_auth_headers = %w(X-HTTP_AUTHORIZATION HTTP_AUTHORIZATION Authorization)
   # gets BASIC auth info
   def get_auth_data
-    auth_key  = @@http_auth_headers.detect { |h| request.env.has_key?(h) }
+    auth_key  = HTTP_AUTH_HEADERS.detect { |h| request.env.has_key?(h) }
     auth_data = request.env[auth_key].to_s.split unless auth_key.blank?
     return auth_data && auth_data[0] == 'Basic' ? Base64.decode64(auth_data[1]).split(':')[0..1] : [nil, nil]
   end

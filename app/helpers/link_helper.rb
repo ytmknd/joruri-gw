@@ -45,9 +45,6 @@ module LinkHelper
       :close     => '非公開'
     }
     params[0] = labels[params[0]] if labels.key?(params[0])
-    if request && false && !request.mobile.supports_cookie?
-      params[1] = jpmobile_url(params[1])
-    end
     options = params[2]
 
     if options && options[:method] == :delete
@@ -90,33 +87,6 @@ module LinkHelper
     end
 
     super(*params)
-  end
-
-  def jpmobile_session_key
-    key = request.session_options[:key]
-    key = "_session_id" if key.blank?
-    return key
-  end
-
-  def jpmobile_session_id
-    request.session_options[:id] rescue session.session_id
-  end
-
-  def jpmobile_url(url)
-    begin
-      url_parse = URI.parse(url)
-      skey = jpmobile_session_key
-      sid  = jpmobile_session_id
-      if url_parse.query
-        url_parse.query += "&#{skey}=#{sid}"
-      else
-        url_parse.query = "#{skey}=#{sid}"
-      end
-      session_url = url_parse.to_s
-    rescue URI::InvalidURIError
-      session_url = url
-    end
-    return session_url
   end
 
   ## E-mail to entity

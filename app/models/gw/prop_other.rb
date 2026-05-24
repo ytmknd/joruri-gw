@@ -189,7 +189,7 @@ class Gw::PropOther < Gw::PropBase
     if self.errors.size == 0 && self.editable? && self.save()
       prop_id = self.id
 
-      Gw::PropOtherRole.destroy_all("prop_id = #{prop_id} and auth = 'admin'")
+      Gw::PropOtherRole.where("prop_id = #{prop_id} and auth = 'admin'").destroy_all
       admin_groups.each_with_index{|admin_group, y|
         new_admin_group = Gw::PropOtherRole.new()
         new_admin_group.gid = admin_group[1]

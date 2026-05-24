@@ -1,58 +1,52 @@
 class Core
-  ## Core attributes.
-  cattr_reader   :now
-  cattr_accessor :title
-  cattr_reader   :map_key
-  cattr_reader   :env
-  cattr_reader   :params
-###  cattr_reader   :mode
-###  cattr_reader   :site
-  cattr_reader   :script_uri
-  cattr_reader   :request_uri
-  cattr_reader   :internal_uri
-###  cattr_reader   :current_node
-  cattr_accessor :ldap
-  cattr_accessor :imap
-  cattr_accessor :user
-  cattr_accessor :user_group
-  cattr_accessor :dispatched
-###  cattr_accessor :concept
-  cattr_accessor :messages
+  STORAGE_KEYS = %i[
+    now title map_key env params script_uri request_uri internal_uri
+    ldap imap user user_group dispatched messages
+  ].freeze
+
+  class << self
+    STORAGE_KEYS.each do |key|
+      define_method(key) { storage[key] }
+      define_method("#{key}=") { |value| storage[key] = value }
+    end
+  end
 
   ## Initializes.
   def self.initialize(env = {})
-    @@now          = Time.now.to_fs(:db)
-    @@config       = config
-    @@title        = @@config['title'] || 'Joruri'
-    @@map_key      = @@config['map_key']
-    @@env          = env
-    @@params       = parse_query_string(env)
+    terminate
+    storage.clear
+
+    core_config   = config
+    self.now      = Time.now.to_fs(:db)
+    self.title    = core_config['title'] || 'Joruri'
+    self.map_key  = core_config['map_key']
+    self.env      = env
+    self.params   = parse_query_string(env)
 ###    @@mode         = nil
 ###    @@site         = nil
-    @@script_uri   = env['SCRIPT_URI'] || "http://#{env['HTTP_HOST']}#{env['PATH_INFO']}"
-    @@request_uri  = nil
-    @@internal_uri = nil
+    self.script_uri   = env['SCRIPT_URI'] || "http://#{env['HTTP_HOST']}#{env['PATH_INFO']}"
+    self.request_uri  = nil
+    self.internal_uri = nil
 ###    @@current_node = nil
-    @@ldap         = nil
-    @@imap         = nil
-    @@user         = nil
-    @@user_group   = nil
-    @@dispatched   = nil
+    self.ldap         = nil
+    self.imap         = nil
+    self.user         = nil
+    self.user_group   = nil
+    self.dispatched   = nil
 ###    @@concept      = nil
-    @@messages     = []
+    self.messages     = []
 
     #require 'page'
     Page.initialize
   end
 
   def self.config
-    @@config ||= Util::Config.load(:core)
+    @config ||= Util::Config.load(:core)
   end
 
   ## Now.
   def self.now
-    return @@now if @@now
-    return @@now = Time.now.to_fs(:db)
+    storage[:now] ||= Time.now.to_fs(:db)
   end
 
   ## Absolute path.
@@ -91,24 +85,22 @@ class Core
 
   ## LDAP.
   def self.ldap
-    return @@ldap if @@ldap
-    @@ldap = Sys::Lib::Ldap.new
+    storage[:ldap] ||= Sys::Lib::Ldap.new
   end
 
   ## IMAP.
   def self.imap
-    return @@imap if @@imap
-    @@imap = Sys::Lib::Net::Imap.connect
+    storage[:imap] ||= Sys::Lib::Net::Imap.connect
   end
 
   ## Controller was dispatched?
   def self.dispatched?
-    @@dispatched
+    storage[:dispatched]
   end
 
   ## Controller was dispatched.
   def self.dispatched
-    @@dispatched = true
+    self.dispatched = true
   end
 
   ## Recognizes the path for dispatch.
@@ -116,7 +108,7 @@ class Core
 ###    Page.error    = false
     Page.uri      = path
 ###    @@request_uri = path
-    @@request_uri = @@internal_uri = path
+    self.request_uri = self.internal_uri = path
 
 ###    self.recognize_mode
 ###    self.recognize_site if @mode != 'script'
@@ -183,18 +175,22 @@ class Core
 ###  end
 
   def self.terminate
-    if @@ldap
-      @@ldap.connection.unbind rescue nil
-      @@ldap = nil
+    if storage[:ldap]
+      storage[:ldap].connection.unbind rescue nil
+      storage[:ldap] = nil
     end
-    if @@imap
-      @@imap.logout rescue nil
-      @@imap.disconnect rescue nil
-      @@imap = nil
+    if storage[:imap]
+      storage[:imap].logout rescue nil
+      storage[:imap].disconnect rescue nil
+      storage[:imap] = nil
     end
   end
 
 private
+  def self.storage
+    Thread.current[:joruri_core_storage] ||= {}
+  end
+
 ###  def self.recognize_mode
 ###    if (@@request_uri =~ /^\/_[a-z]+(\/|$)/)
 ###      @@mode = @@request_uri.gsub(/^\/_([a-z]+).*/, '\1')

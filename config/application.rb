@@ -75,6 +75,10 @@ module JoruriGw
     # config.active_record.schema_format = :sql
 
     # whitelist_attributes removed in Rails 5 (was part of protected_attributes gem)
+    # Strong Parameters 未対応のレガシーコントローラ (270+) を一括で動かすため、
+    # ActionController::Parameters を Hash 互換として扱う暫定設定。
+    # 本格的な Strong Parameters 移行は Phase 2 タスクとして順次実施予定。
+    config.action_controller.permit_all_parameters = true
   end
 end
 

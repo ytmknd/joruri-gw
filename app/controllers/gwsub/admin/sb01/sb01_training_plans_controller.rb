@@ -38,7 +38,7 @@ class Gwsub::Admin::Sb01::Sb01TrainingPlansController < Gw::Controller::Admin::B
     # 予約条件取得
     @tcs = Gwsub::Sb01TrainingScheduleCondition.where(:training_id => @item.id).order(:from_start)
     #最終開催日が過ぎているか判定
-    @skd = Gwsub::Sb01TrainingSchedule.where('training_id = ?', @item.id).order('IF( ISNULL( from_start ) , 1, 0 ) ASC , from_start DESC').first
+    @skd = Gwsub::Sb01TrainingSchedule.where('training_id = ?', @item.id).order(Arel.sql('IF( ISNULL( from_start ) , 1, 0 ) ASC , from_start DESC')).first
     @expiry = false
     @expiry = true if @skd.from_start < Time.now and @item.state == '2' if !@skd.blank? && !@skd.from_start.blank?
   end

@@ -37,7 +37,7 @@ class Gw::Admin::ScheduleEventsController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:p, :page, :s_approval, :s_open, :s_st_at, :sort_keys, :s_gid).symbolize_keys) 
+    super.merge(params.slice(:p, :page, :s_approval, :s_open, :s_st_at, :sort_keys, :s_gid).to_unsafe_h.symbolize_keys)
   end
 
   def index
@@ -78,7 +78,7 @@ class Gw::Admin::ScheduleEventsController < Gw::Controller::Admin::Base
       ed_at = @pattern == "week" ? st_at + 6 : st_at.end_of_month
       items = items.start_at_between(st_at, ed_at)
     end
- 
+
     if params[:s_gid].present? && (group = System::Group.find_by(id: params[:s_gid]))
       items = items.where(gid: group.self_and_enabled_descendants.map(&:id))
     end

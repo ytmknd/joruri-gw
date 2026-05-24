@@ -673,9 +673,9 @@
       # 共済等とりまとめでは、各種検診担当も洗い替え
       kind_105_id  = Gwsub::Sb06AssignedConfKind.where(:id => @item.conf_kind_id).first
       if kind_105_id.conf_kind_code=='105'
-#        Gwsub::Sb06AssignedConferenceMember.delete_all("conference_id=#{@item.id} and conf_item_sort_no=10502")
+#        Gwsub::Sb06AssignedConferenceMember.where("conference_id=#{@item.id} and conf_item_sort_no=10502").delete_all
         # 兼務で自動作成したデータは削除
-        Gwsub::Sb06AssignedConferenceMember.delete_all("conference_id=#{@item.id} and conf_item_sort_no=10502 and remarks='1'")
+        Gwsub::Sb06AssignedConferenceMember.where("conference_id=#{@item.id} and conf_item_sort_no=10502 and remarks='1'").delete_all
       end
       # member 繰返し処理 index分
       kind_max_count  = Gwsub::Sb06AssignedConfKind.find(@kind_id).conf_max_count
@@ -964,7 +964,7 @@
       member.save(:validate => false)
     end
     # 承認者がいる場合はクリア
-    Gwsub::Sb06Recognizer.delete_all(["parent_id = ?",params[:id]])
+    Gwsub::Sb06Recognizer.where(["parent_id = ?",params[:id]]).delete_all
     # 処理後は詳細画面に戻す
     flash[:notice]  = "下書きに戻しました。"
     location = url_for({:action => :show, :id => params[:id]})
@@ -1343,7 +1343,7 @@ pp items
       m.save(:validate => false)
     end
     @item.save
-    Gwsub::Sb06Recognizer.delete_all(["parent_id = ?",params[:id]])
+    Gwsub::Sb06Recognizer.where(["parent_id = ?",params[:id]]).delete_all
     flash[:notice] = '却下しました'
     @item.rec_rejected  #担当者にリマインダー却下通知
     # 一覧表示用パラメーター作成

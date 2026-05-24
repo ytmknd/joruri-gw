@@ -13,7 +13,7 @@ class System::LoginLog < ApplicationRecord
 
   def self.delete_past(user)
     if (list = user.logins).size > 10
-      delete_all(['user_id = ? and id < ?', user.id, list[9].id])
+      where(['user_id = ? and id < ?', user.id, list[9].id]).delete_all
     end
     user.logins.reload
   end

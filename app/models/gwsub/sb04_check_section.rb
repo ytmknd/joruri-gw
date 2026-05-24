@@ -261,7 +261,7 @@ class Gwsub::Sb04CheckSection < Gwsub::GwsubPref
   end
 
   def self.import_table(fyear_id = nil)
-    Gwsub::Sb04section.destroy_all(:fyear_id=>fyear_id)
+    Gwsub::Sb04section.where(:fyear_id=>fyear_id).destroy_all
     fields = Array.new
     items = self.all.order(:id)
 

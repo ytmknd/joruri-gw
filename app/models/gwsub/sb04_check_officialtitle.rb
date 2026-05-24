@@ -186,7 +186,7 @@ class Gwsub::Sb04CheckOfficialtitle < Gwsub::GwsubPref
   end
 
   def self.import_table(fyear_id = nil)
-    Gwsub::Sb04officialtitle.destroy_all(:fyear_id=>fyear_id)
+    Gwsub::Sb04officialtitle.where(:fyear_id=>fyear_id).destroy_all
     fields = Array.new
     items = self.all.order(:id)
 

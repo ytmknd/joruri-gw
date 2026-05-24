@@ -652,7 +652,7 @@ class Gwsub
     end
 
     group_order   = "code , sort_no , start_at DESC, end_at IS Null ,end_at DESC"
-    group_parents = System::Group.where(group_cond).order(group_order)
+    group_parents = System::Group.where(group_cond).order(Arel.sql(group_order))
     # 選択DD　作成
     group_select = []
     if group_parents.blank?

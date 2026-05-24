@@ -20,12 +20,12 @@ class Gw::Admin::PropGenreCommonController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:cls).symbolize_keys) 
+    super.merge(params.slice(:cls).to_unsafe_h.symbolize_keys)
   end
 
   def index
     @items = @model
-    @items = @items.where(delete_state: 0) unless @is_admin 
+    @items = @items.where(delete_state: 0) unless @is_admin
     @items = @items.order(delete_state: :asc, reserved_state: :desc, gid: :asc, sort_no: :asc, name: :asc)
       .paginate(page: params[:page], per_page: params[:limit])
   end

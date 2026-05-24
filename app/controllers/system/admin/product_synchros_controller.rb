@@ -38,7 +38,7 @@ class System::Admin::ProductSynchrosController < Gw::Controller::Admin::Base
   def destroy
     @item = System::ProductSynchro.find(params[:id])
 
-    System::ProductSynchro.delete_all(:version => @item.version)
+    System::ProductSynchro.where(:version => @item.version).delete_all
 
     flash[:notice] = '削除処理が完了しました。'
     redirect_to :action => :index

@@ -541,6 +541,8 @@ class Gw::ScheduleProp < Gw::Database
 
   def self.getajax(_params, _options={})
     begin
+      _params = _params.to_unsafe_h if _params.respond_to?(:to_unsafe_h)
+      _options = _options.to_unsafe_h if _options.respond_to?(:to_unsafe_h)
       params = HashWithIndifferentAccess.new(_params)
       options = HashWithIndifferentAccess.new(_options)
       genre_raw = params['s_genre']

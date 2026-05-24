@@ -223,7 +223,7 @@ class Gwsub::Sb04CheckAssignedjob < Gwsub::GwsubPref
   end
 
   def self.import_table(fyear_id = nil)
-    Gwsub::Sb04assignedjob.destroy_all(:fyear_id=>fyear_id)
+    Gwsub::Sb04assignedjob.where(:fyear_id=>fyear_id).destroy_all
     fields = Array.new
     items = self.all.order(:id)
 

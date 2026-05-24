@@ -39,18 +39,16 @@ module RenderComponent
 
     def request_for_component(_controller_path, options)
       component_params = options.delete(:params)
-      jpmobile_params = options.delete(:jpmobile)
-      options.merge!(component_params) if component_params
+      if component_params
+        component_params = component_params.to_unsafe_h if component_params.respond_to?(:to_unsafe_h)
+        options.merge!(component_params)
+      end
 
       request_params = options.symbolize_keys
       request_env = request.env.dup
       request_env['action_dispatch.request.symbolized_path_parameters'] = request_params
       request_env['action_dispatch.request.parameters'] = request_params.with_indifferent_access
       request_env['action_dispatch.request.path_parameters'] = request_params.slice(:controller, :action)
-      if jpmobile_params
-        request_env['HTTP_USER_AGENT'] = jpmobile_params['HTTP_USER_AGENT']
-        request_env['rack.jpmobile'] = jpmobile_params['rack.jpmobile']
-      end
       ActionDispatch::Request.new(request_env)
     end
   end

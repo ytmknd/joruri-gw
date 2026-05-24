@@ -284,7 +284,7 @@ module Sys::Lib::Net::Imap
       uids.size
     end
     
-    def delete_all(mailbox, uids, complete = false)
+    def where(mailbox, uids, complete = false).delete_all
       return 0 if uids.size == 0
       
       num = 0

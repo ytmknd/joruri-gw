@@ -15,7 +15,7 @@ class Gw::Admin::YearFiscalJpsController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:limit, :s_keyword).symbolize_keys) 
+    super.merge(params.slice(:limit, :s_keyword).to_unsafe_h.symbolize_keys)
   end
 
   def index

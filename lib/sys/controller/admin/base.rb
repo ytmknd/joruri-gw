@@ -7,7 +7,7 @@ class Sys::Controller::Admin::Base < ApplicationController
   def initialize_application
     return false unless super
 
-    @@current_user = false
+    self.current_user = nil
     if authenticate
       Core.user          = current_user
       Core.user.password = Util::String::Crypt.decrypt(session[PASSWD_KEY])

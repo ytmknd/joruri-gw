@@ -41,7 +41,7 @@ class Gwbbs::Admin::Piece::MenusController < ApplicationController
     @monthlies = @title.docs.public_docs
       .select("DATE_FORMAT(latest_updated_at,'%Y年%m月') AS month, DATE_FORMAT(latest_updated_at,'%Y') AS yy, DATE_FORMAT(latest_updated_at,'%m') AS mm, count(id) as cnt")
       .group("DATE_FORMAT(latest_updated_at,'%Y年%m月')")
-      .order("DATE_FORMAT(latest_updated_at,'%Y年%m月') DESC")
+      .order(Arel.sql("DATE_FORMAT(latest_updated_at,'%Y年%m月') DESC"))
     @monthlies = @monthlies.limit(@title.monthly_view_line) if @title.monthly_view_line > 0
   end
 
@@ -56,7 +56,7 @@ class Gwbbs::Admin::Piece::MenusController < ApplicationController
     @monthlies = @title.docs.public_docs
       .select("inpfld_006w, count(id) as cnt")
       .group(:inpfld_006w)
-      .order("DATE_FORMAT(inpfld_006d,'%Y年%m月') DESC")
+      .order(Arel.sql("DATE_FORMAT(inpfld_006d,'%Y年%m月') DESC"))
     @monthlies = @monthlies.limit(@title.monthly_view_line) if @title.monthly_view_line > 0
   end
 end

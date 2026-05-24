@@ -14,7 +14,7 @@ class Gw::Admin::PrefAssemblyMemberAdminsController < Gw::Controller::Admin::Bas
   end
 
   def url_options
-    super.merge(params.slice(:g_cat).symbolize_keys)
+    super.merge(params.slice(:g_cat).to_unsafe_h.symbolize_keys)
   end
 
   def index

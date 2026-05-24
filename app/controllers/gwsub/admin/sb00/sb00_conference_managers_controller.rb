@@ -83,7 +83,7 @@ pp current_fyear,next_fyear
       items_del = item.find(:all)
       unless items_del.blank?
         # 作成済データを削除して再作成
-        Gwsub::Sb00ConferenceManager.destroy_all("controler='#{@ctrl}' and fyear_id=#{next_fyear.id}")
+        Gwsub::Sb00ConferenceManager.where("controler='#{@ctrl}' and fyear_id=#{next_fyear.id}").destroy_all
 #        flash[:notice] = "コピー済です。"
 #        redirect_to location
 #        return

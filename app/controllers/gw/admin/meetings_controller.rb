@@ -40,7 +40,7 @@ class Gw::Admin::MeetingsController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:page, :mode, :s_date).symbolize_keys) 
+    super.merge(params.slice(:page, :mode, :s_date).to_unsafe_h.symbolize_keys)
   end
 
   def guide
@@ -60,7 +60,7 @@ class Gw::Admin::MeetingsController < Gw::Controller::Admin::Base
       return redirect_to url_for(action: :guide), notice: "対象が選択されていません。"
     end
 
-    notice = 
+    notice =
       if params[:guide_state_2_submit].present?
         approve_multi
       elsif params[:guide_state_1_submit].present?
@@ -88,7 +88,7 @@ class Gw::Admin::MeetingsController < Gw::Controller::Admin::Base
         skip += 1
       end
     end
-  
+
     notices = []
     if success == 0
       notices << "未承認の案内表示はありませんでした。"

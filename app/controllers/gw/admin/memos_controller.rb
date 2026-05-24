@@ -21,7 +21,7 @@ class Gw::Admin::MemosController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:s_send_cls, :s_index_cls, :s_finished, :sort_keys).symbolize_keys)
+    super.merge(params.slice(:s_send_cls, :s_index_cls, :s_finished, :sort_keys).to_unsafe_h.symbolize_keys)
   end
 
   def index

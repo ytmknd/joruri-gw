@@ -20,7 +20,7 @@ class Gw::Admin::PropOthersController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:cls).symbolize_keys) 
+    super.merge(params.slice(:cls).to_unsafe_h.symbolize_keys)
   end
 
   def index

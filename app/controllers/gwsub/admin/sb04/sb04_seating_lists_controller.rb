@@ -175,12 +175,12 @@ class Gwsub::Admin::Sb04::Sb04SeatingListsController < Gw::Controller::Admin::Ba
     @title = Gwbbs::Control.where(:id =>title_id).first
     return '4' if @title.blank?
 
-    Gwbbs::Category.delete_all(:title_id => @title.id)
-    Gwbbs::Comment.delete_all(:title_id => @title.id)
-    Gwbbs::DbFile.delete_all(:title_id => @title.id)
-    Gwbbs::Doc.delete_all(:title_id => @title.id)
-    Gwbbs::File.delete_all(:title_id => @title.id)
-    Gwbbs::Recognizer.delete_all(:title_id => @title.id)
+    Gwbbs::Category.where(:title_id => @title.id).delete_all
+    Gwbbs::Comment.where(:title_id => @title.id).delete_all
+    Gwbbs::DbFile.where(:title_id => @title.id).delete_all
+    Gwbbs::Doc.where(:title_id => @title.id).delete_all
+    Gwbbs::File.where(:title_id => @title.id).delete_all
+    Gwbbs::Recognizer.where(:title_id => @title.id).delete_all
 
     default_published = 240 unless default_published  # 公開停止は240ヶ月先
     groups.each do |g|

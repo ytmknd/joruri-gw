@@ -135,7 +135,7 @@ class Gw::PropExtraPmRentcarActual  < Gw::Database
     return unless self.end_meter_changed?
 
     if schedule_prop && schedule_prop.prop && schedule_prop.prop.meter 
-      schedule_prop.prop.meter.update_attributes(travelled_km: self.end_meter)
+      schedule_prop.prop.meter.update(travelled_km: self.end_meter)
     end
   end
 
@@ -143,13 +143,13 @@ class Gw::PropExtraPmRentcarActual  < Gw::Database
     if self.start_at_changed? || self.end_at_changed?
       if self.start_at && self.end_at && schedule
         if self.end_at < schedule.ed_at
-          schedule.update_attributes(ed_at: self.end_at)
+          schedule.update(ed_at: self.end_at)
     
           schedule.schedule_props.each do |sp|
-            sp.update_attributes(ed_at: self.end_at)
+            sp.update(ed_at: self.end_at)
           end
           schedule.schedule_users.each do |su|
-            su.update_attributes(ed_at: self.end_at)
+            su.update(ed_at: self.end_at)
           end
         end
       end

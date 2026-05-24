@@ -16,7 +16,7 @@ class Gw::Admin::ScheduleTodosController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:s_finished, :sort_keys).symbolize_keys)
+    super.merge(params.slice(:s_finished, :sort_keys).to_unsafe_h.symbolize_keys)
   end
 
   def index

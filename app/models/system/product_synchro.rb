@@ -26,11 +26,11 @@ class System::ProductSynchro < ApplicationRecord
       item.version = version
       item.plan_id = options[:plan_id] if options[:plan_id].present?
       item.save(:validate => false)
-      items << item 
+      items << item
     end
 
     item = items.detect{|i| i.product.product_type == 'gw'}
-    item.update_attributes(:state => 'start')
+    item.update(:state => 'start')
 
     if options[:delay]
       item.delay.execute_gw
@@ -58,7 +58,7 @@ class System::ProductSynchro < ApplicationRecord
 protected
 
   def create_temporary
-    update_attributes(:state => 'temp')
+    update(:state => 'temp')
 
     results = System::LdapTemporary.create_temporary(self.version)
 
@@ -67,10 +67,10 @@ protected
     messages << "-- 失敗 #{results[:gerr]}件" if results[:gerr] > 0
     messages << "ユーザ #{results[:user]}件"
     messages << "-- 失敗 #{results[:uerr]}件" if results[:uerr] > 0
-    update_attributes(:remark_temp => messages.join("\n"))
+    update(:remark_temp => messages.join("\n"))
 
     if results[:gerr] > 0 || results[:uerr] > 0
-      update_attributes(:state => 'failure')
+      update(:state => 'failure')
       return false
     end
 
@@ -78,7 +78,7 @@ protected
   end
 
   def backup_table
-    update_attributes(:state => 'back')
+    update(:state => 'back')
 
     results = {:copy => 0, :cerr => 0}
 
@@ -97,10 +97,10 @@ protected
     messages = []
     messages << "テーブル #{results[:copy]}件"
     messages << "--失敗 #{results[:cerr]}件" if results[:cerr] > 0
-    update_attributes(:remark_back => messages.join("\n"))
+    update(:remark_back => messages.join("\n"))
 
     if results[:cerr] > 0
-      update_attributes(:state => 'failure')
+      update(:state => 'failure')
       return false
     end
 
@@ -108,19 +108,19 @@ protected
   end
 
   def synchronize
-    update_attributes(:state => 'sync')
+    update(:state => 'sync')
 
     results = System::LdapTemporary.synchronize(self.version)
 
     messages = []
     messages << "--エラー\n#{results.join("\n")}" if results.size > 0
-    update_attributes(:remark_sync => messages.join("\n"))
+    update(:remark_sync => messages.join("\n"))
 
     if results.size > 0
-      update_attributes(:state => 'failure')
+      update(:state => 'failure')
       return false
     else
-      update_attributes(:state => 'success')
+      update(:state => 'success')
       return true
     end
   end

@@ -157,9 +157,9 @@ class Gwsub::Sb01Training < Gwsub::GwsubPref
     destroy_attaches(id)
     destroy_schedule(id)
     destroy_members_shcedule(id)
-    Gwsub::Sb01TrainingScheduleCondition.destroy_all(:training_id => id)
-    Gwsub::Sb01TrainingSchedule.destroy_all(:training_id => id)
-    Gwsub::Sb01TrainingScheduleMember.destroy_all(:training_id => id)
+    Gwsub::Sb01TrainingScheduleCondition.where(:training_id => id).destroy_all
+    Gwsub::Sb01TrainingSchedule.where(:training_id => id).destroy_all
+    Gwsub::Sb01TrainingScheduleMember.where(:training_id => id).destroy_all
   end
 
   #研修を削除したときにその研修に日もづいているUploadファイルも削除する
@@ -175,7 +175,7 @@ class Gwsub::Sb01Training < Gwsub::GwsubPref
     t_skd = Gwsub::Sb01TrainingSchedule.where(:training_id => id)
     unless t_skd.blank?
       schedule_ids = t_skd.map{|x| x.schedule_id}
-      Gw::Schedule.destroy_all(:id => schedule_ids) unless schedule_ids.blank?
+      Gw::Schedule.where(:id => schedule_ids).destroy_all unless schedule_ids.blank?
     end
   end
 
@@ -183,7 +183,7 @@ class Gwsub::Sb01Training < Gwsub::GwsubPref
     skd_m = Gwsub::Sb01TrainingScheduleMember.where(:training_id => id)
     unless skd_m.blank?
       schedule_ids = skd_m.map{|x| x.schedule_id}
-      Gw::Schedule.destroy_all(:id => schedule_ids) unless schedule_ids.blank?
+      Gw::Schedule.where(:id => schedule_ids).destroy_all unless schedule_ids.blank?
     end
   end
 

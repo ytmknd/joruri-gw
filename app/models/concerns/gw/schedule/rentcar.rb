@@ -25,7 +25,7 @@ module Gw::Schedule::Rentcar
     tmp_dates = []
     self.meetingroom_options = params[:options]
     rent_item_flg = true
-    _props = JSON.parse(params[:item][:schedule_props_json])
+    _props = params[:item][:schedule_props_json].present? ? JSON.parse(params[:item][:schedule_props_json]) : []
     _props.each do |prop|
       case params[:init][:repeat_mode]
       when "1"
@@ -90,7 +90,7 @@ module Gw::Schedule::Rentcar
 
   def tmp_schedule_users(params)
     users = []
-    sh_users = JSON.parse(params[:item][:schedule_users_json])
+    sh_users = params[:item][:schedule_users_json].present? ? JSON.parse(params[:item][:schedule_users_json]) : []
     sh_users.each do |sh_user|
       user = System::User.where(:id => sh_user[1], :state => "enabled").first
       users << user if user.present?
@@ -100,7 +100,7 @@ module Gw::Schedule::Rentcar
 
   def tmp_public_groups(params)
     groups = []
-    sh_groups = JSON.parse(params[:item][:public_groups_json])
+    sh_groups = params[:item][:public_groups_json].present? ? JSON.parse(params[:item][:public_groups_json]) : []
     sh_groups.each do |sh_group|
       group = System::Group.where(:id => sh_group[1], :state => "enabled").first
       groups << group.name if group.present?

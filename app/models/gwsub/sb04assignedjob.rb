@@ -170,7 +170,7 @@ class Gwsub::Sb04assignedjob < Gwsub::GwsubPref
     else
 
       # コピー先所属を削除
-      self.destroy_all(["fyear_id = ? and section_id = ?", par_item[:destination_fyear_id].to_i, par_item[:destination_section_id].to_i ])
+      self.where(["fyear_id = ? and section_id = ?", par_item[:destination_fyear_id].to_i, par_item[:destination_section_id].to_i ]).destroy_all
       # コピー
       fields = Array.new
       items = self.new.find(:all, :conditions => ["fyear_id = ? and section_id = ?", par_item[:origin_fyear_id].to_i, par_item[:origin_section_id].to_i ],

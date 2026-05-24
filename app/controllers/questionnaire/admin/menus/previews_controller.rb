@@ -44,7 +44,7 @@ class Questionnaire::Admin::Menus::PreviewsController < Gw::Controller::Admin::B
   def new
     return error_auth unless is_creator
 
-    Questionnaire::Preview.destroy_all("parent_id=#{@title.id}")
+    Questionnaire::Preview.where("parent_id=#{@title.id}").destroy_all
 
     @item = Questionnaire::Preview.new({
       :state => 'public',

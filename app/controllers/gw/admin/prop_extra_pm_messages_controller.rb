@@ -11,7 +11,7 @@ class Gw::Admin::PropExtraPmMessagesController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:s_prop_class_id).symbolize_keys) 
+    super.merge(params.slice(:s_prop_class_id).to_unsafe_h.symbolize_keys)
   end
 
   def index

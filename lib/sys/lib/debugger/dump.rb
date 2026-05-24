@@ -1,13 +1,14 @@
 ## simple logger
 class Sys::Lib::Debugger::Dump
-  cattr_reader :dump_logger
-  
   def self.dump_log(data)
     begin
-      @@dump_logger ||= Logger.new("#{Rails.root}/log/dump.log")
-      @@dump_logger.debug to_str(data)
+      dump_logger.debug to_str(data)
     rescue Exception
     end
+  end
+
+  def self.dump_logger
+    @dump_logger ||= Logger.new("#{Rails.root}/log/dump.log")
   end
   
   def self.sp(num)

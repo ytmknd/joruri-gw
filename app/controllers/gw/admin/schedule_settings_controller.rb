@@ -109,10 +109,10 @@ class Gw::Admin::ScheduleSettingsController  < Gw::Controller::Admin::Base
         else
           file_data =  NKF::nkf('-w',tempfile.read)
       end
-      require 'ri_cal'
+      require 'icalendar'
       categories = I18n.t('enum.gw/schedule.title_category_id').invert
       begin
-        cals = RiCal.parse_string( file_data )
+        cals = Icalendar::Calendar.parse(file_data)
       rescue Exception => e
         flash.now[:notice] = "iCal形式の解析に失敗しました。（#{e.message}）"
         return render :action => "import"
@@ -128,13 +128,9 @@ class Gw::Admin::ScheduleSettingsController  < Gw::Controller::Admin::Base
           error += 1
           next
         end
-        if event.dtstart_property.tzid == 'UTC' && event.dtstart.class == Class::DateTime
-          dtstart = event.dtstart.new_offset(Rational(+9,24))
-          dtend = event.dtend.new_offset(Rational(+9,24))
-        else
-          dtstart = event.dtstart
-          dtend = event.dtend
-        end
+        all_day_event = icalendar_date_value?(event.dtstart)
+        dtstart = icalendar_value_to_jst(event.dtstart)
+        dtend = icalendar_value_to_jst(event.dtend)
         _params = Hash::new
         _params[:item] = Hash::new
         _params[:init] = Hash::new
@@ -149,35 +145,31 @@ class Gw::Admin::ScheduleSettingsController  < Gw::Controller::Admin::Base
         _params[:item][:creator_gid] = "#{Core.user_group.id}"
         _params[:item][:is_public] = "3"
         _params[:item][:st_at] = "#{dtstart.strftime('%Y-%m-%d %H:%M')}"
-        event.categories_property.map{|category|
+        Array(event.categories).map{|category|
           _params[:item][:title_category_id] = categories[category.to_s.gsub(':','')]
         }
-        if dtstart.class == Class::Date || ( dtstart == dtend - 1 && dtstart.hour == 0 && dtstart.min == 0)
+        if all_day_event || full_day_icalendar_event?(dtstart, dtend)
           _params[:item][:allday_radio_id] = '2'
           _params[:item][:repeat_allday_radio_id] = '2'
           _params[:item][:st_at] = DateTime.new(dtstart.year, dtstart.month, dtstart.day, 0, 0).strftime('%Y-%m-%d %H:%M')
-          _dtend = dtend - 1
+          _dtend = icalendar_value_minus_one_day(dtend)
           _params[:item][:ed_at] = DateTime.new(_dtend.year, _dtend.month, _dtend.day, 23, 59).strftime('%Y-%m-%d %H:%M')
         else
           _params[:item][:ed_at] = "#{dtend.strftime('%Y-%m-%d %H:%M')}"
         end
-        if !event.rrule_property.blank?
+        if !event.rrule.blank?
           _params[:init][:repeat_mode] = "2"
           continue_flag = 0
-          event.rrule_property.map{|rule|
+          Array(event.rrule).map{|rule|
             if rule.until.blank?
               continue_flag = 1
               error_msg += '終了日指定のない繰り返し予定は登録できません。<br />'
               next
             end
-            if rule.until.tzid == 'UTC'
-              until_dt = DateTime.new(rule.until.year, rule.until.month, rule.until.day, rule.until.hour, rule.until.min, 0, Rational(0,24)).new_offset(Rational(+9,24))
-            else
-              until_dt = DateTime.new(rule.until.year, rule.until.month, rule.until.day, rule.until.hour, rule.until.min, 0, Rational(+9,24))
-            end
+            until_dt = parse_icalendar_until(rule.until)
             _params[:item][:repeat_st_date_at] = "#{dtstart.strftime('%Y-%m-%d')}"
             _params[:item][:repeat_ed_date_at] = "#{until_dt.strftime('%Y-%m-%d')}"
-            if dtstart.class == Class::Date || ( dtstart == dtend - 1 && dtstart.hour == 0 && dtstart.min == 0)
+            if all_day_event || full_day_icalendar_event?(dtstart, dtend)
               _params[:item][:repeat_st_time_at] = "00:00"
               _params[:item][:repeat_ed_time_at] = "23:59"
             else
@@ -188,14 +180,14 @@ class Gw::Admin::ScheduleSettingsController  < Gw::Controller::Admin::Base
               continue_flag = 1
               error_msg += '間隔ありの繰り返し予定は登録できません。<br />'
            end
-           case rule.freq
+           case rule.frequency
              when 'DAILY'
               _params[:item][:repeat_class_id] = '1'
              when 'WEEKLY'
               _params[:item][:repeat_class_id] = '3'
               _params[:item][:repeat_weekday_ids] = {}
               weekday_ids = ''
-              rule.by_list[:byday].each{|w|
+              Array(rule.by_day).each{|w|
                 w = w.to_s
                 weekday_ids += ( weekday_ids.blank? ? wary.index(w).to_s : ':'+wary.index(w).to_s ) #:でつなぐ
               }
@@ -212,7 +204,7 @@ class Gw::Admin::ScheduleSettingsController  < Gw::Controller::Admin::Base
             error_msg += item.errors.full_messages.join("<br />\n")
             error += 1
           end
-        elsif !event.recurrence_id_property.blank?
+        elsif !event.recurrence_id.blank?
 
         else
           _params[:init][:repeat_mode] = "1"
@@ -348,5 +340,41 @@ class Gw::Admin::ScheduleSettingsController  < Gw::Controller::Admin::Base
     @item.save
 
     redirect_to params[:url].to_s
+  end
+
+private
+  def icalendar_date_value?(value)
+    value.is_a?(Icalendar::Values::Date) && !value.is_a?(Icalendar::Values::DateTime)
+  end
+
+  def icalendar_value_to_jst(value)
+    if icalendar_date_value?(value)
+      value.to_date
+    else
+      value.to_time.in_time_zone('Tokyo')
+    end
+  end
+
+  def full_day_icalendar_event?(dtstart, dtend)
+    return false unless dtstart.respond_to?(:hour) && dtend.respond_to?(:hour)
+    dtstart == icalendar_value_minus_one_day(dtend) && dtstart.hour == 0 && dtstart.min == 0
+  end
+
+  def icalendar_value_minus_one_day(value)
+    value.respond_to?(:advance) ? value.advance(days: -1) : value - 1
+  end
+
+  def parse_icalendar_until(value)
+    value = value.to_s
+    case value
+    when /\A\d{8}T\d{6}Z\z/
+      DateTime.strptime(value, '%Y%m%dT%H%M%SZ').in_time_zone('UTC').in_time_zone('Tokyo')
+    when /\A\d{8}T\d{6}\z/
+      Time.zone.strptime(value, '%Y%m%dT%H%M%S').in_time_zone('Tokyo')
+    when /\A\d{8}\z/
+      Date.strptime(value, '%Y%m%d')
+    else
+      Time.zone.parse(value).in_time_zone('Tokyo')
+    end
   end
 end

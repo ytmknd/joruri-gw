@@ -14,7 +14,7 @@ class Gw::ScheduleRepeat < Gw::Database
     item.tmp_id = params[:item][:tmp_id]
     current_time = Time.now
     option_items = params[:options].blank? ? "" : params[:options].join(",")
-    _props = JSON.parse(params[:item][:schedule_props_json])
+    _props = params[:item][:schedule_props_json].present? ? JSON.parse(params[:item][:schedule_props_json]) : []
     prop_cancelled_cond = "gw_schedule_props.extra_data is null or gw_schedule_props.extra_data not like '%\"cancelled\":1%'" # キャンセルを条件に加えるSQL文
     rentcar_flg = false
     has_pm = 0; has_mr_pm = 0; has_ot_ot = 0; has_rc_pm = 0; mr_pm_ids = []; rc_pm_ids = []; ot_ot_ids = []; first_meetingroom_id = 0; first_meetingroom_name = ''
@@ -673,7 +673,7 @@ class Gw::ScheduleRepeat < Gw::Database
     end
 
     if nz(par_item_base[:is_public],0).to_s != "1"
-      _users = JSON.parse(params[:item][:schedule_users_json])
+      _users = params[:item][:schedule_users_json].present? ? JSON.parse(params[:item][:schedule_users_json]) : []
       _users.each do |_user|
         _uid = _user[1]
         _u = System::User.where(state: 'enabled', id: _uid, code: AppConfig.gw.schedule_pref_admin['pref_admin_code']).first
@@ -695,7 +695,7 @@ class Gw::ScheduleRepeat < Gw::Database
 
 
     repeat_schedule_parent_id = []
-    _props = JSON.parse(params[:item][:schedule_props_json])
+    _props = params[:item][:schedule_props_json].present? ? JSON.parse(params[:item][:schedule_props_json]) : []
 
     if _props.length > 0
 
@@ -729,7 +729,7 @@ class Gw::ScheduleRepeat < Gw::Database
               when :update
                 schedule_repeat_id = item.repeat.id
                 cnt == 0 ? item_repeat = Gw::ScheduleRepeat.where(:id=> schedule_repeat_id).first : item_repeat = Gw::ScheduleRepeat.new
-                item_repeat.update_attributes!(par_item_repeat)
+                item_repeat.update!(par_item_repeat)
                 if cnt == 0
                   repeat_items = Gw::Schedule.where("schedule_repeat_id=#{schedule_repeat_id}")
                   repeat_items.each { |repeat_item|
@@ -763,7 +763,7 @@ class Gw::ScheduleRepeat < Gw::Database
                   date_cnt = date_cnt + 1
 
                 }
-                item.update_attributes item_next.attributes
+                item.update item_next.attributes
                 item.id = item_next.id
               when :create
                 item_repeat = Gw::ScheduleRepeat.new(par_item_repeat)
@@ -827,7 +827,7 @@ class Gw::ScheduleRepeat < Gw::Database
 
               schedule_repeat_id = item.repeat.id
               item_repeat = Gw::ScheduleRepeat.where(:id=>schedule_repeat_id).first
-              item_repeat.update_attributes!(par_item_repeat)
+              item_repeat.update!(par_item_repeat)
 
               repeat_items = Gw::Schedule.where("schedule_repeat_id=#{schedule_repeat_id}")
               repeat_items.each { |repeat_item|
@@ -856,7 +856,7 @@ class Gw::ScheduleRepeat < Gw::Database
                 raise if !ret_swr
               }
 
-              item.update_attributes item_next.attributes
+              item.update item_next.attributes
               item.id = item_next.id
             when :create
               item_repeat = Gw::ScheduleRepeat.new(par_item_repeat)

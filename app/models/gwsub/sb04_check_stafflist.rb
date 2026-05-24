@@ -378,7 +378,7 @@ class Gwsub::Sb04CheckStafflist < Gwsub::GwsubPref
   end
 
   def self.import_table(fyear_id = nil)
-    Gwsub::Sb04stafflist.destroy_all(:fyear_id=>fyear_id)
+    Gwsub::Sb04stafflist.where(:fyear_id=>fyear_id).destroy_all
     fields = Array.new
     items = self.all.order(:id)
 

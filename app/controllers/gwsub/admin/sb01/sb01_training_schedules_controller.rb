@@ -146,7 +146,7 @@ class Gwsub::Admin::Sb01::Sb01TrainingSchedulesController < Gw::Controller::Admi
         skd.destroy unless skd.blank?
         s.destroy
       end
-      #Gwsub::Sb01TrainingSchedule.destroy_all("training_schedule_id = #{@item.id}")
+      #Gwsub::Sb01TrainingSchedule.where("training_schedule_id = #{@item.id}").destroy_all
     end
   end
 

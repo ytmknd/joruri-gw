@@ -76,7 +76,7 @@ class Gwsub::Admin::Sb00::Sb00ConferenceReferencesController < Gw::Controller::A
       item.order "kind_code"
       items_del = item.find(:all)
       unless items_del.blank?
-        Gwsub::Sb00ConferenceReference.destroy_all("fyear_id = #{next_fyear.id} and group_id=#{Core.user_group.id}")
+        Gwsub::Sb00ConferenceReference.where("fyear_id = #{next_fyear.id} and group_id=#{Core.user_group.id}").destroy_all
 #        flash[:notice] = "コピー済です。"
 #        redirect_to location
 #        return

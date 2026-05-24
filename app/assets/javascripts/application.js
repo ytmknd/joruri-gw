@@ -10,19 +10,20 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-// prototype removed — calendar_date_select replaced with flatpickr
+// prototype は GW/gwsub の Ajax.Request および select_options_* で依然必要
+//= require prototype
 //= require flatpickr.min
 //= require flatpickr-l10n-ja
 //= require dateformat
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require jquery-ui/datepicker-ja
+//= require jquery-ui/i18n/datepicker-ja
 //= require jquery-ui-timepicker-addon
 //= require jquery-ui/jquery-ui-sliderAccess
 //= require jquery-ui/datepicker-custom
-//= require jquery-ui/draggable
-//= require jquery-ui/droppable
+//= require jquery-ui/widgets/draggable
+//= require jquery-ui/widgets/droppable
 //= require jquery-fileupload/basic
 //= require_tree .
 

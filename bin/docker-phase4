@@ -51,7 +51,7 @@ session.get("/_admin/login")
 raise "Login page failed (#{session.status})" unless session.status == 200
 puts "GET /_admin/login: #{session.status} OK"
 
-session.post("/_admin/login", {account: "admin", password: "admin"})
+session.post("/_admin/login", params: {account: "admin", password: "admin"})
 raise "Login POST failed (#{session.status})" unless [302, 301].include?(session.status)
 puts "POST /_admin/login (admin/admin): #{session.status} REDIRECT OK"
 

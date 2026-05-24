@@ -128,7 +128,7 @@ class System::User < ApplicationRecord
   end
 
   def delete_group_relations
-    System::UsersGroup.delete_all(:user_id => id)
+    System::UsersGroup.where(:user_id => id).delete_all
     return true
   end
 
@@ -270,7 +270,7 @@ class System::User < ApplicationRecord
     self.remember_token_expires_at = nil
     self.remember_token            = nil
     #save(:validate => false)
-    update_attributes :remember_token_expires_at => nil, :remember_token => nil
+    update :remember_token_expires_at => nil, :remember_token => nil
   end
 
   def previous_login_date

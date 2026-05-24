@@ -193,7 +193,7 @@ class Gw::ScheduleEvent < Gw::Database
     items = items.where(gid: Core.user.id) unless is_ev_reader
     items = items.select("YEARWEEK(st_at, 3) as yearweek")
       .group("YEARWEEK(st_at, 3)")
-      .order("YEARWEEK(st_at, 3)")
+      .order(Arel.sql("YEARWEEK(st_at, 3)"))
 
     items.inject([['すべて','']]) do |arr, item|
       d = Date.commercial(item.yearweek.to_s[0..3].to_i, item.yearweek.to_s[4..5].to_i) rescue nil
@@ -207,7 +207,7 @@ class Gw::ScheduleEvent < Gw::Database
     items = items.where(gid: Core.user.id) unless is_ev_reader
     items = items.select("DATE_FORMAT(st_at, '%Y-%m-01') as month, DATE_FORMAT(st_at, '%Y年%m月') as month_str")
       .group("DATE_FORMAT(st_at, '%Y-%m-01')")
-      .order("DATE_FORMAT(st_at, '%Y-%m-01')")
+      .order(Arel.sql("DATE_FORMAT(st_at, '%Y-%m-01')"))
 
     items.inject([['すべて','']]) {|arr, item| arr << [item.month_str, item.month] }
   end

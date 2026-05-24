@@ -9,6 +9,6 @@ class System::Session < ApplicationRecord
 
   def self.delete_expired_sessions
     expiration = Joruri.config.application['sys.session_expiration']
-    delete_all(["updated_at < ?", expiration.hours.ago])
+    where(["updated_at < ?", expiration.hours.ago]).delete_all
   end
 end

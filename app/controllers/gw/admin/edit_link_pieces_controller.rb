@@ -17,7 +17,7 @@ class Gw::Admin::EditLinkPiecesController < Gw::Controller::Admin::Base
   end
 
   def url_options
-    super.merge(params.slice(:pid).symbolize_keys)
+    super.merge(params.slice(:pid).to_unsafe_h.symbolize_keys)
   end
 
   def index

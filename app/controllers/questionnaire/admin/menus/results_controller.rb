@@ -69,8 +69,8 @@ class Questionnaire::Admin::Menus::ResultsController < Gw::Controller::Admin::Ba
       d.and :parent_id, @title.id
     }
 		field_count = Questionnaire::FormField.where(sql.where).count
-    Questionnaire::Result.destroy_all("title_id=#{@title.id}")
-    Questionnaire::Temporary.destroy_all("title_id=#{@title.id}")
+    Questionnaire::Result.where("title_id=#{@title.id}").destroy_all
+    Questionnaire::Temporary.where("title_id=#{@title.id}").destroy_all
     field_to_result_records(field_count)
     item = Enquete::Answer.new
     item.and :state, 'public'

@@ -31,7 +31,7 @@ class Questionnaire::Admin::Templates::PreviewsController < Gw::Controller::Admi
   def new
     system_admin_flags
 
-    Questionnaire::TemplatePreview.destroy_all("parent_id=#{@title.id}")
+    Questionnaire::TemplatePreview.where("parent_id=#{@title.id}").destroy_all
 
     @item = Questionnaire::TemplatePreview.new({
       :state => 'public',

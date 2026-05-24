@@ -50,7 +50,7 @@ class Gwsub::Admin::Sb06::Sb0606menuController < Gw::Controller::Admin::Base
       item.order "group_code"
       items_del = item.find(:all)
       unless items_del.blank?
-        Gwsub::Sb06AssignedConfGroup.destroy_all("fyear_id = #{next_fyear.id}")
+        Gwsub::Sb06AssignedConfGroup.where("fyear_id = #{next_fyear.id}").destroy_all
   #        flash[:notice] = "コピー済です。"
   #        redirect_to location
   #        return
@@ -102,7 +102,7 @@ class Gwsub::Admin::Sb06::Sb0606menuController < Gw::Controller::Admin::Base
       conf_items_del = conf_item_del.find(:all)
 
       unless conf_items_del.blank?
-        Gwsub::Sb06AssignedConfKind.destroy_all("fyear_id = #{next_fyear.id}")
+        Gwsub::Sb06AssignedConfKind.where("fyear_id = #{next_fyear.id}").destroy_all
       end
       Gwsub::Sb06AssignedConfKind.transaction do
         # コピー

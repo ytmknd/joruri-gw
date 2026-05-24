@@ -174,7 +174,7 @@ class Questionnaire::Admin::Menus::TemplatesController < Gw::Controller::Admin::
     #@template_title.state = "public"
     @template_title.save
 
-    #Questionnaire::FormField.destroy_all("parent_id=#{@title.id}")
+    #Questionnaire::FormField.where("parent_id=#{@title.id}").destroy_all
     item = Questionnaire::FormField.new
     item.and :state, 'public'
     item.and :parent_id, params[:parent_id]

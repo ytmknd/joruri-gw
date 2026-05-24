@@ -85,19 +85,19 @@ class Gw::PropExtraPmMeetingroomActual < Gw::Database
     if self.start_at_changed? || self.end_at_changed?
       if self.start_at && self.end_at && schedule
         if self.end_at < schedule.ed_at
-          schedule.update_attributes(
+          schedule.update(
             st_at: self.start_at,
             ed_at: self.end_at
           )
     
           schedule.schedule_props.each do |sp|
-            sp.update_attributes(
+            sp.update(
               st_at: self.start_at,
               ed_at: self.end_at
             )
           end
           schedule.schedule_users.each do |su|
-            su.update_attributes(
+            su.update(
               st_at: self.start_at,
               ed_at: self.end_at
             )

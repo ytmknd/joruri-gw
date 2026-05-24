@@ -138,11 +138,11 @@ class Gw::Schedule < Gw::Database
     di[:allday] = nil unless di[:allday]
 
     di.delete :public_groups
-    _public_groups = JSON.parse(par_item[:public_groups_json])
+    _public_groups = par_item[:public_groups_json].present? ? JSON.parse(par_item[:public_groups_json]) : []
     di.delete :public_groups_json
 
     di.delete :schedule_users
-    _users = JSON.parse(par_item[:schedule_users_json])
+    _users = par_item[:schedule_users_json].present? ? JSON.parse(par_item[:schedule_users_json]) : []
     di.delete :schedule_users_json
     kind_id = par_item[:form_kind_id]
     di.delete :form_kind_id
@@ -223,7 +223,7 @@ class Gw::Schedule < Gw::Database
       di.delete :created_at
     end
 
-    _props = JSON.parse(par_item[:schedule_props_json])
+    _props = par_item[:schedule_props_json].present? ? JSON.parse(par_item[:schedule_props_json]) : []
     di.delete :schedule_props
     di.delete :schedule_props_json
     di.delete :allday_radio_id
@@ -240,12 +240,12 @@ class Gw::Schedule < Gw::Database
     proc_core = lambda{
 
       if mode == :update
-        return false if !item.update_attributes(di)
-        Gw::ScheduleUser.destroy_all("schedule_id=#{item.id}")
-        Gw::ScheduleProp.destroy_all("schedule_id=#{item.id}")
-        Gw::SchedulePublicRole.destroy_all("schedule_id=#{item.id}")
+        return false if !item.update(di)
+        Gw::ScheduleUser.where("schedule_id=#{item.id}").destroy_all
+        Gw::ScheduleProp.where("schedule_id=#{item.id}").destroy_all
+        Gw::SchedulePublicRole.where("schedule_id=#{item.id}").destroy_all
       else
-        return false if !item.update_attributes(di)
+        return false if !item.update(di)
       end
       if options[:option_items]
         opt_item = item.schedule_option || Gw::ScheduleOption.new({:schedule_id => item.id})
@@ -337,7 +337,7 @@ class Gw::Schedule < Gw::Database
         # 二重の保存になってしまうので注意。
         if par_item[:schedule_parent_id].blank?
           di[:schedule_parent_id] = item.id
-          item.update_attributes(di)
+          item.update(di)
         end
 
         item_sub = Gw::ScheduleProp.new()
@@ -394,7 +394,7 @@ class Gw::Schedule < Gw::Database
       end
 
       # 公開所属
-      Gw::SchedulePublicRole.destroy_all("schedule_id=#{item.id}") if mode == :update
+      Gw::SchedulePublicRole.where("schedule_id=#{item.id}").destroy_all if mode == :update
       if ( prop.blank? || (!prop.blank? && prop[0] == "other") ) && par_item[:is_public] == '2'
         _public_groups.each do |_public_group|
           item_public_role = Gw::SchedulePublicRole.new()
@@ -822,7 +822,7 @@ class Gw::Schedule < Gw::Database
       _params[:admin_memo] = params[:item][:admin_memo]
       if !params[:item][:schedule_users_json].blank?
         _users = JSON.parse(params[:item][:schedule_users_json])
-        Gw::ScheduleUser.destroy_all("schedule_id=#{item.id}")
+        Gw::ScheduleUser.where("schedule_id=#{item.id}").destroy_all
         _users.each do |user|
           item_sub = Gw::ScheduleUser.new()
           item_sub.schedule_id = item.id
@@ -836,7 +836,7 @@ class Gw::Schedule < Gw::Database
 
       _params = _params.reject{|k,v|!%w(ed_at(1i) ed_at(2i) ed_at(3i) ed_at(4i) ed_at(5i) st_at(1i) st_at(2i) st_at(3i) st_at(4i) st_at(5i) schedule_users_json schedule_users allday_radio_id allday_radio_id form_kind_id).index(k).nil?}
 
-      item.update_attributes(_params)
+      item.update(_params)
       return true
 
     else
