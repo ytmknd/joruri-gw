@@ -5,7 +5,8 @@ class Gw::ScheduleRepeat < Gw::Database
   has_many :schedules, :foreign_key => :schedule_repeat_id, :class_name => 'Gw::Schedule', :dependent=>:destroy
 
   def self.save_with_rels_concerning_repeat(item, params, mode,options = {})
-   raise "update/create 以外は未実装です" if %w(update create).index(mode.to_s).nil?
+    raise "update/create 以外は未実装です" if %w(update create).index(mode.to_s).nil?
+    Gw::Schedule.ensure_relation_json!(params[:item])
     form_kind_id = params[:item][:form_kind_id]
     if form_kind_id == "0" || form_kind_id == "2"
       params[:item][:inquire_to] = ""

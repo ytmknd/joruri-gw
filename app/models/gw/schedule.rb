@@ -133,6 +133,8 @@ class Gw::Schedule < Gw::Database
   def self.save_with_rels(item, par_item, mode, prop, delete_props = Array.new, options = {})
     repeat_mode = nz(options[:repeat_mode], 1).to_i
 
+    ensure_relation_json!(par_item)
+
     is_pm_admin = options[:is_pm_admin]
     di = par_item.dup
     di[:allday] = nil unless di[:allday]
@@ -1616,6 +1618,40 @@ URL
 
     def load_system_settings
       AppConfig.gw.schedule_system_settings
+    end
+
+    def ensure_relation_json!(par_item)
+      return if par_item.blank?
+
+      if par_item[:schedule_users_json].blank?
+        users = Array(par_item.dig(:schedule_users, :uid)).reject(&:blank?).map do |uid|
+          uid = uid.to_i
+          user = System::User.where(id: uid).first
+          if user
+            ['1', user.id.to_s, user.display_name]
+          else
+            group = System::Group.where(id: uid).first
+            ['2', uid.to_s, group.try(:name).to_s]
+          end
+        end
+        par_item[:schedule_users_json] = users.to_json if users.present?
+      end
+
+      if par_item[:schedule_props_json].blank?
+        genre = par_item.dig(:schedule_props, :prop_type_id).to_s.split(':').first
+        props = Array(par_item.dig(:schedule_props, :prop_id)).reject(&:blank?).map do |prop_id|
+          [genre, prop_id.to_s, '']
+        end
+        par_item[:schedule_props_json] = props.to_json if props.present?
+      end
+
+      if par_item[:public_groups_json].blank?
+        groups = Array(par_item.dig(:public_groups, :gid)).reject(&:blank?).map do |gid|
+          group = System::Group.where(id: gid).first
+          ['', gid.to_s, group.try(:name).to_s]
+        end
+        par_item[:public_groups_json] = groups.to_json if groups.present?
+      end
     end
   end
 
