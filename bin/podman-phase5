@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+PHASE5_RUNTIME=podman exec "$(dirname "$0")/phase5" "$@"

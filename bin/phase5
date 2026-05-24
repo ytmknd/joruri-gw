@@ -1,0 +1,213 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  bin/phase5 [--runtime docker|podman] <command>
+
+Compatibility commands:
+  build           Build the existing app-phase5 image.
+  check           Print Ruby version and verify Rails boots with app-phase5.
+  up              Start app-phase5 on http://localhost:3006/.
+  setup           Create/load/seed development and test databases.
+  test            Run the Rails test suite with app-phase5.
+  smoke           Run the admin login smoke check with app-phase5.
+  all             Run build, setup, check, test, then smoke.
+
+Ubuntu 26.04 / Docker-oriented commands:
+  ubuntu26-build  Build the Ubuntu 26.04 / Ruby 4.0 image.
+  ubuntu26-check  Print Ruby version and verify Rails boots.
+  ubuntu26-test   Run the Rails test suite.
+  ubuntu26-setup  Load schema and seed the database.
+  ubuntu26-assets Precompile assets.
+  ubuntu26-up     Start Rails on http://localhost:3008/.
+  ubuntu26-stack  Start app, Nginx proxy, delayed_job worker, and scheduler.
+
+AlmaLinux 9 / Podman-oriented commands:
+  alma-build      Build the AlmaLinux 9 / Ruby 4.0 image.
+  alma-check      Print Ruby version and verify Rails boots.
+  alma-test       Run the Rails test suite.
+  alma-setup      Load schema and seed the database.
+  alma-assets     Precompile assets.
+  alma-up         Start Rails on http://localhost:3010/.
+  alma-stack      Start app, Nginx proxy, delayed_job worker, and scheduler.
+
+Runtime selection order: PHASE5_RUNTIME env, --runtime flag, podman, docker.
+USAGE
+}
+
+runtime="${PHASE5_RUNTIME:-}"
+
+if [[ "${1:-}" = "--runtime" ]]; then
+  runtime="${2:-}"
+  shift 2
+fi
+
+if [[ -z "${runtime}" ]]; then
+  if command -v podman > /dev/null 2>&1; then
+    runtime=podman
+  elif command -v docker > /dev/null 2>&1; then
+    runtime=docker
+  else
+    echo "ERROR: neither podman nor docker found in PATH." >&2
+    exit 1
+  fi
+fi
+
+case "${runtime}" in
+  podman)
+    if ! command -v podman > /dev/null 2>&1; then
+      echo "ERROR: podman not found." >&2
+      exit 1
+    fi
+    if ! podman compose version > /dev/null 2>&1; then
+      echo "ERROR: 'podman compose' not available. Install podman-compose." >&2
+      exit 1
+    fi
+    if command -v podman-compose > /dev/null 2>&1; then
+      export PODMAN_COMPOSE_PROVIDER
+      PODMAN_COMPOSE_PROVIDER="$(command -v podman-compose)"
+    fi
+    if command -v getenforce > /dev/null 2>&1 && [[ "$(getenforce)" = "Enforcing" ]]; then
+      export COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.yml}:docker-compose.selinux.yml"
+    fi
+    compose=(podman compose)
+    ;;
+  docker)
+    if ! command -v docker > /dev/null 2>&1; then
+      echo "ERROR: docker not found." >&2
+      exit 1
+    fi
+    compose=(docker compose)
+    ;;
+  *)
+    echo "ERROR: unknown runtime '${runtime}'. Use docker or podman." >&2
+    exit 1
+    ;;
+esac
+
+cmd="${1:-}"
+
+run_smoke() {
+  local service="$1"
+  shift
+  "${compose[@]}" "$@" run --rm "${service}" bundle exec rails runner '
+session = ActionDispatch::Integration::Session.new(Rails.application)
+session.get("/_admin/login")
+raise "Login page failed (#{session.status})" unless session.status == 200
+puts "GET /_admin/login: #{session.status} OK"
+
+session.post("/_admin/login", params: {account: "admin", password: "admin"})
+raise "Login POST failed (#{session.status})" unless [302, 301].include?(session.status)
+puts "POST /_admin/login (admin/admin): #{session.status} REDIRECT OK"
+
+puts "Smoke check passed."
+'
+}
+
+case "${cmd}" in
+  ""|-h|--help|help)
+    usage
+    ;;
+
+  build)
+    "${compose[@]}" build app-phase5
+    ;;
+  check)
+    "${compose[@]}" run --rm app-phase5 ruby -v
+    "${compose[@]}" run --rm app-phase5 bundle exec rails runner 'puts "Rails #{Rails.version} booted"'
+    ;;
+  up)
+    "${compose[@]}" up app-phase5
+    ;;
+  setup)
+    "${compose[@]}" run --rm app-phase5 bundle exec rake db:create db:schema:load db:seed
+    "${compose[@]}" run --rm -e RAILS_ENV=test app-phase5 bundle exec rake db:create db:schema:load
+    ;;
+  test)
+    "${compose[@]}" run --rm -e RAILS_ENV=test app-phase5 bundle exec rake test
+    ;;
+  smoke)
+    echo "--- admin login smoke check ---"
+    run_smoke app-phase5
+    ;;
+  all)
+    "$0" --runtime "${runtime}" build
+    "$0" --runtime "${runtime}" setup
+    "$0" --runtime "${runtime}" check
+    "$0" --runtime "${runtime}" test
+    "$0" --runtime "${runtime}" smoke
+    ;;
+
+  ubuntu26-build)
+    if [[ "${runtime}" = "podman" ]]; then
+      podman build --platform linux/amd64 --format docker \
+        -t joruri-gw:ubuntu26-ruby4 \
+        -f docker/ubuntu26-ruby4/Dockerfile .
+    else
+      docker build --platform linux/amd64 \
+        -t joruri-gw:ubuntu26-ruby4 \
+        -f docker/ubuntu26-ruby4/Dockerfile .
+    fi
+    ;;
+  ubuntu26-check)
+    "${compose[@]}" --profile ubuntu26 run --rm app-ubuntu26-ruby4 ruby -v
+    "${compose[@]}" --profile ubuntu26 run --rm app-ubuntu26-ruby4 bundle exec rails runner \
+      'puts "Ruby #{RUBY_VERSION} Rails #{Rails.version} booted; YJIT=#{defined?(RubyVM::YJIT) && RubyVM::YJIT.enabled?}"'
+    ;;
+  ubuntu26-test)
+    "${compose[@]}" --profile ubuntu26 run --rm -e RAILS_ENV=test app-ubuntu26-ruby4 bundle exec rake test
+    ;;
+  ubuntu26-setup)
+    "${compose[@]}" --profile ubuntu26 run --rm app-ubuntu26-ruby4 bundle exec rake db:create db:schema:load db:seed
+    "${compose[@]}" --profile ubuntu26 run --rm -e RAILS_ENV=test app-ubuntu26-ruby4 bundle exec rake db:create db:schema:load
+    ;;
+  ubuntu26-assets)
+    "${compose[@]}" --profile ubuntu26 run --rm -u joruri app-ubuntu26-ruby4 bundle exec rake assets:precompile
+    ;;
+  ubuntu26-up)
+    "${compose[@]}" --profile ubuntu26 up app-ubuntu26-ruby4
+    ;;
+  ubuntu26-stack)
+    "${compose[@]}" --profile ubuntu26 up app-ubuntu26-ruby4 app-ubuntu26-ruby4-proxy app-ubuntu26-ruby4-worker app-ubuntu26-ruby4-scheduler
+    ;;
+
+  alma-build)
+    if [[ "${runtime}" = "podman" ]]; then
+      podman build --platform linux/amd64 --format docker \
+        -t joruri-gw:almalinux9-ruby4 \
+        -f docker/almalinux9-ruby4/Dockerfile .
+    else
+      docker build --platform linux/amd64 \
+        -t joruri-gw:almalinux9-ruby4 \
+        -f docker/almalinux9-ruby4/Dockerfile .
+    fi
+    ;;
+  alma-check)
+    "${compose[@]}" --profile alma9 run --rm app-almalinux9-ruby4 ruby -v
+    "${compose[@]}" --profile alma9 run --rm app-almalinux9-ruby4 bundle exec rails runner \
+      'puts "Ruby #{RUBY_VERSION} Rails #{Rails.version} booted; YJIT=#{defined?(RubyVM::YJIT) && RubyVM::YJIT.enabled?}"'
+    ;;
+  alma-test)
+    "${compose[@]}" --profile alma9 run --rm -e RAILS_ENV=test app-almalinux9-ruby4 bundle exec rake test
+    ;;
+  alma-setup)
+    "${compose[@]}" --profile alma9 run --rm app-almalinux9-ruby4 bundle exec rake db:create db:schema:load db:seed
+    "${compose[@]}" --profile alma9 run --rm -e RAILS_ENV=test app-almalinux9-ruby4 bundle exec rake db:create db:schema:load
+    ;;
+  alma-assets)
+    "${compose[@]}" --profile alma9 run --rm -u joruri app-almalinux9-ruby4 bundle exec rake assets:precompile
+    ;;
+  alma-up)
+    "${compose[@]}" --profile alma9 up app-almalinux9-ruby4
+    ;;
+  alma-stack)
+    "${compose[@]}" --profile alma9 up app-almalinux9-ruby4 app-almalinux9-ruby4-proxy app-almalinux9-ruby4-worker app-almalinux9-ruby4-scheduler
+    ;;
+
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

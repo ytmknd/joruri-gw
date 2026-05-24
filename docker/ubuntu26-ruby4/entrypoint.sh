@@ -41,7 +41,12 @@ if [[ "$(id -u)" = "0" ]]; then
       upload \
       vendor/bundle
   fi
-  exec gosu joruri "$0" "$@"
+  # runuser is stable under Podman/QEMU; gosu is kept as the Docker fallback.
+  if command -v runuser > /dev/null 2>&1; then
+    exec runuser -u joruri -- "$0" "$@"
+  else
+    exec gosu joruri "$0" "$@"
+  fi
 fi
 
 if [[ "${1:-}" = "bundle" && "${2:-}" = "exec" && "${3:-}" = "rails" && "${4:-}" = "server" ]]; then
