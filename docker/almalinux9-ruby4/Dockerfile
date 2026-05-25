@@ -13,6 +13,7 @@ ENV RBENV_ROOT=/usr/local/rbenv \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN dnf install -y epel-release && \
+    crb enable && \
     dnf module enable -y nodejs:20 && \
     dnf install -y \
       autoconf \
@@ -20,7 +21,6 @@ RUN dnf install -y epel-release && \
       bzip2 \
       ca-certificates \
       cargo \
-      curl \
       cyrus-sasl-devel \
       gdbm-devel \
       gcc \
@@ -39,7 +39,7 @@ RUN dnf install -y epel-release && \
       libzip-devel \
       make \
       mariadb \
-      mariadb-devel \
+      mariadb-connector-c-devel \
       ncurses-devel \
       nodejs \
       openldap-devel \
@@ -75,6 +75,8 @@ RUN cp Gemfile.lock Gemfile.lock.build && \
 
 COPY docker/ubuntu26-ruby4/entrypoint.sh /usr/local/bin/joruri-entrypoint
 RUN chmod +x /usr/local/bin/joruri-entrypoint
+
+ENV RUBY_YJIT_ENABLE=1
 
 EXPOSE 3000
 

@@ -13,8 +13,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get -o Acquire::Retries=5 update && \
+    apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
       autoconf \
       bison \
       build-essential \
@@ -88,6 +88,8 @@ RUN cp Gemfile.lock Gemfile.lock.build && \
 
 COPY docker/ubuntu26-ruby4/entrypoint.sh /usr/local/bin/joruri-entrypoint
 RUN chmod +x /usr/local/bin/joruri-entrypoint
+
+ENV RUBY_YJIT_ENABLE=1
 
 EXPOSE 3000
 
